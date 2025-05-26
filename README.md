@@ -1,5 +1,10 @@
 
 ## Getting Started
+A fim de organização faça os seguintes passos
+altere para 2 o
+- Tab Size
+e desative o
+- Detect Indentation
 
 Ao iniciar o projeto ou a cada nova atualização de bibliotecas rode:
 
