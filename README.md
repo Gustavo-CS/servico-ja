@@ -10,6 +10,14 @@ Ao iniciar o projeto ou a cada nova atualização de bibliotecas rode:
 
 npm install
 
+Adicione o .env com os seguintes campos:
+`POSTGRES_HOST=host`
+`POSTGRES_PORT=5432`
+`POSTGRES_USER=user`
+`POSTGRES_DB=db`
+`POSTGRES_PASSWORD=password`
+`DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB`
+
 Para rodar o site localmente:
 
 npm run dev
