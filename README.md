@@ -18,6 +18,11 @@ Adicione o .env com os seguintes campos:
 `POSTGRES_PASSWORD=password`
 `DATABASE_URL=url_neon`
 
+Para subir mudanças para o banco:
+- altere o arquivo `schema.js` com as mudanças requeridas
+e rode:
+`npm run db:push`
+
 Para rodar o site localmente:
 
 npm run dev
