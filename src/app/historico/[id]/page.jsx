@@ -1,11 +1,6 @@
 import { use } from 'react';
 
-const historicoCliente: Record<string, {
-  id: number;
-  servico: string;
-  profissional: string;
-  data: string;
-}[]> = {
+const historicoCliente = {
   '1': [
     { id: 1, servico: 'Corte de Cabelo', profissional: 'Ana Souza', data: '2025-05-20' },
     { id: 2, servico: 'Corte de Cabelo', profissional: 'Ana Souza', data: '2025-06-20' },
@@ -16,12 +11,7 @@ const historicoCliente: Record<string, {
   ],
 };
 
-const historicoProfissional: Record<string, {
-  id: number;
-  servico: string;
-  cliente: string;
-  data: string;
-}[]> = {
+const historicoProfissional = {
   '2': [
     { id: 1, servico: 'Corte de Cabelo', cliente: 'Felipe Cardoso', data: '2025-05-20' },
     { id: 2, servico: 'Corte de Cabelo', cliente: 'Felipe Cardoso', data: '2025-06-20' },
@@ -35,9 +25,6 @@ const historicoProfissional: Record<string, {
 export default function HistoricoUsuario({
   params,
   searchParams,
-}: {
-  params: Promise<{ id: string }>;
-  searchParams: Promise<{ tipo?: string }>;
 }) {
   const { id } = use(params);
   const { tipo } = use(searchParams);
