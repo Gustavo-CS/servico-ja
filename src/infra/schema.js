@@ -4,13 +4,7 @@ import {
   text,
 } from "drizzle-orm/pg-core";;
 
-export const outraTable = pgTable("outraTable", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  text: text("text").notNull(),
-  fk_id: integer("fk_id"),
-});
-
 export const noTable = pgTable("noTable", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(), //generatedAlwaysAsIdentity é o autoincrement do neon
   titulo: text("titulo").notNull(),
 });

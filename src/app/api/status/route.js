@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import database from '../../../infra/database';
+import { sql } from 'drizzle-orm';
 
 export async function GET() {
   const updatedAt = new Date().toISOString();
@@ -7,16 +8,13 @@ export async function GET() {
   try {
     const dbName = process.env.POSTGRES_DB;
 
-    const dbVersionResult = await database.query('SHOW server_version;');
-    const dbVersion = dbVersionResult.rows[0].server_version;
+    const versionResult = await database.execute(sql`SHOW server_version;`);
+    const dbVersion = versionResult.rows[0].server_version;
 
-    const maxConnResult = await database.query('SHOW max_connections;');
+    const maxConnResult = await database.execute(sql`SHOW max_connections;`);
     const maxConnections = parseInt(maxConnResult.rows[0].max_connections);
 
-    const openConnResult = await database.query({
-      text: 'SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1;',
-      values: [dbName],
-    });
+    const openConnResult = await database.execute(sql`SELECT count(*)::int FROM pg_stat_activity WHERE datname = ${dbName};`);
     const openedConnections = openConnResult.rows[0].count;
 
     return NextResponse.json({
