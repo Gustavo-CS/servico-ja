@@ -16,7 +16,7 @@ Adicione o .env com os seguintes campos:
 `POSTGRES_USER=user`
 `POSTGRES_DB=db`
 `POSTGRES_PASSWORD=password`
-`DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB`
+`DATABASE_URL=url_neon`
 
 Para rodar o site localmente:
 
