@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+drizzle/meta
+drizzle/*.sql
+drizzle/relations.ts

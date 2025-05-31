@@ -1,12 +1,11 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import pkg from 'pg'; // importação do pacote 'pg'
-import { sql } from 'drizzle-orm';
-import { noTable } from './schema.js';
+import { noTable4 } from '../../drizzle/schema';
 const { Pool } = pkg;
 
 // Cria pool de conexão
 const pool = new Pool({
-  connectionString: "postgresql://faculDb_owner:npg_lfLGIhx6w0rN@ep-delicate-cell-ac36nkie-pooler.sa-east-1.aws.neon.tech/faculDb?sslmode=require",
+  connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }

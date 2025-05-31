@@ -18,10 +18,14 @@ Adicione o .env com os seguintes campos:
 `POSTGRES_PASSWORD=password`
 `DATABASE_URL=url_neon`
 
+Para buscar mudanças no banco de dados rode:
+`npm run db:pull`
+
 Para subir mudanças para o banco:
 - altere o arquivo `schema.js` com as mudanças requeridas
 e rode:
 `npm run db:push`
+**ANTES DE QUALQUER MUDANÇA RODE `npm run db:pull`**
 
 Para rodar o site localmente:
 
