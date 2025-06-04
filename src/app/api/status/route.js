@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import database from '../../../infra/database';
 import { sql } from 'drizzle-orm';
 
