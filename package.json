@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:push": "drizzle push",
+    "db:push": "drizzle-kit push",
     "db:pull": "node --experimental-specifier-resolution=node scripts/pull-and-fix.js"
   },
   "dependencies": {
