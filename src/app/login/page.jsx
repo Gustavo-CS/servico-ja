@@ -72,7 +72,7 @@ export default function PaginaDeLogin() {
           </div>
           
           <div className="text-right mt-1">
-            <a href="#" className="text-xs text-indigo-600 hover:text-indigo-500 hover:underline">
+            <a href="/recupera" className="text-xs text-indigo-600 hover:text-indigo-500 hover:underline">
               Esqueceu a senha?
             </a>
           </div>
@@ -90,7 +90,7 @@ export default function PaginaDeLogin() {
 
       <p className="mt-8 text-center text-sm text-gray-600">
         Ainda não tem uma conta?{' '}
-        <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500 hover:underline">
+        <a href="/registro" className="font-semibold text-indigo-600 hover:text-indigo-500 hover:underline">
           Cadastre-se aqui
         </a>
       </p>
