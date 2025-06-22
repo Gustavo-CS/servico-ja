@@ -104,7 +104,7 @@ export const neonTable = pgTable("neonTable", {
 
 export const ratings = pgTable('ratings', {
   id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "ratings_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647 }),
-  professionalId: integer('professional_id')
+  profissionalId: integer('profissional_id')
     .references(() => profissional.id)
     .notNull(),
   score: integer('score').notNull(),
