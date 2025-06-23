@@ -1,7 +1,9 @@
-import { use } from 'react';
+'use client';
+
+import { use, useEffect, useState } from 'react';
 
 const historicoCliente = {
-  '1': [
+  '2': [
     { id: 1, servico: 'Corte de Cabelo', profissional: 'Ana Souza', data: '2025-05-20' },
     { id: 2, servico: 'Corte de Cabelo', profissional: 'Ana Souza', data: '2025-06-20' },
     { id: 3, servico: 'Corte de Cabelo', profissional: 'Ana Souza', data: '2025-07-10' },
@@ -12,7 +14,7 @@ const historicoCliente = {
 };
 
 const historicoProfissional = {
-  '2': [
+  '1': [
     { id: 1, servico: 'Corte de Cabelo', cliente: 'Felipe Cardoso', data: '2025-05-20' },
     { id: 2, servico: 'Corte de Cabelo', cliente: 'Felipe Cardoso', data: '2025-06-20' },
     { id: 3, servico: 'Corte de Cabelo', cliente: 'Felipe Cardoso', data: '2025-07-10' },
@@ -28,6 +30,19 @@ export default function HistoricoUsuario({
 }) {
   const { id } = use(params);
   const { tipo } = use(searchParams);
+
+  // const [historico, SetHistorico] = useState([]);
+
+  // useEffect(() => {
+  //     async function load() {
+  //       const res = await fetch(`/api/historico/${id}?tipo=${tipo}`);
+  //       if (res.status == 200) {
+  //         const hist = await res.json();
+  //         SetHistorico(hist);
+  //       }
+  //     }
+  //     load();
+  //   }, []);
 
   const historico =
   tipo === 'cliente' ? historicoCliente[id] || [] : historicoProfissional[id] || [];

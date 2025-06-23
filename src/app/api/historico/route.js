@@ -2,7 +2,7 @@ import db from "@/infra/database";
 import { profissional, cliente, usuario } from "@root/drizzle/schema";
 import { eq } from "drizzle-orm";
 
-export async function GET(req, res) {
+export async function GET() {
   try {
     const profissionaisRaw = await db
       .select()
@@ -27,13 +27,20 @@ export async function GET(req, res) {
     const data = [...profissionais, ...clientes];
 
     if (data.length > 0) {
-      return res.status(200).json(data);
+      console.log(data);
+      return new Response(JSON.stringify(data), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
     } else {
-      return res.status(204).end();
+      return new Response(null, { status: 204 });
     }
 
   } catch (error) {
     console.error("Erro ao buscar usuarios", error);
-    res.status(500);
+    return new Response(JSON.stringify({ error: "Erro interno no servidor" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
