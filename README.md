@@ -17,6 +17,7 @@ Adicione o .env com os seguintes campos:
 `POSTGRES_DB=db`
 `POSTGRES_PASSWORD=password`
 `DATABASE_URL=url_neon`
+`JWT_SECRET="9e34fa6a8c9d4176a0a5b8cd2e43cfb8416aa6e51ffad8cb42dcf8cdef12a304"`
 
 Para buscar mudanças no banco de dados rode:
 `npm run db:pull`
