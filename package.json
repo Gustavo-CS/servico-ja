@@ -12,6 +12,7 @@
     "db:pull": "node --experimental-specifier-resolution=node scripts/pull-and-fix.js"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "drizzle-orm": "^0.44.1",
     "next": "15.3.2",
     "pg": "^8.16.0",

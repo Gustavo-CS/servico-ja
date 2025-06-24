@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react'; 
+import { useState } from 'react';
 
+// Os componentes EyeIcon e EyeSlashIcon permanecem os mesmos...
 function EyeIcon(props) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5" {...props}>
@@ -19,12 +20,30 @@ function EyeSlashIcon(props) {
   );
 }
 
-
 export default function PaginaDeLogin() {
-  const [showPassword, setShowPassword] = useState(false); 
+  // REATORADO: Usando useState para controlar os inputs
+  const [loginData, setLoginData] = useState({
+    email: '',
+    senha: '',
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  // REATORADO: Handler para atualizar o estado
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setLoginData({ ...loginData, [name]: value });
+  };
+  
+  // REATORADO: Handler para o submit do formulário
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Dados de login:", loginData);
+    // Aqui você faria a chamada para a API de autenticação
   };
 
   return (
@@ -33,44 +52,48 @@ export default function PaginaDeLogin() {
         Acessar Conta
       </h1>
 
-      <form action="#" method="POST">
+      {/* REATORADO: Adicionado onSubmit handler */}
+      <form onSubmit={handleSubmit}>
         <div className="mb-5">
-          <label htmlFor="login" className="block text-sm font-semibold text-gray-700 mb-1">
-            Usuário ou E-mail
+          <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">
+            E-mail
           </label>
           <input
-            type="text"
-            id="login"
-            name="login"
+            type="email"
+            id="email"
+            name="email"
             placeholder="exemplo@email.com"
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+            value={loginData.email}
+            onChange={handleChange}
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
           />
         </div>
 
-       
         <div className="mb-6">
           <label htmlFor="senha" className="block text-sm font-semibold text-gray-700 mb-1">
             Senha
           </label>
-          <div className="relative"> 
+          <div className="relative">
             <input
-              type={showPassword ? 'text' : 'password'} 
+              type={showPassword ? 'text' : 'password'}
               id="senha"
               name="senha"
               placeholder="••••••••"
-              className="w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-lg shadow-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+              value={loginData.senha}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              required
             />
-
             <button
-              type="button" 
+              type="button"
               onClick={togglePasswordVisibility}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-indigo-600 cursor-pointer"
-              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"} 
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-indigo-600"
+              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
             >
               {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
             </button>
           </div>
-          
           <div className="text-right mt-1">
             <a href="/recupera" className="text-xs text-indigo-600 hover:text-indigo-500 hover:underline">
               Esqueceu a senha?
@@ -81,7 +104,7 @@ export default function PaginaDeLogin() {
         <div className="mb-4">
           <button
             type="submit"
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             Entrar
           </button>
