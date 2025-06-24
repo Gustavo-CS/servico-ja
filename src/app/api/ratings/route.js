@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { ratings } from '@/lib/schema';
+import db from '@/infra/database';
+import { ratings } from '@/drizzle/schema';
 import { eq } from 'drizzle-orm';
 
 export async function POST(req) {

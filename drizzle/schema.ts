@@ -8,9 +8,12 @@ export const usuario = pgTable("usuario", {
 	nome: text().notNull(),
 	cpf: varchar({ length: 11 }).notNull(),
 	email: varchar({ length: 255 }).notNull(),
+	senha: varchar({ length: 255 }).notNull(),
 	telefone: varchar({ length: 15 }).notNull(),
 	endereco: text().notNull(),
 	dataNascimento: date("data_nascimento").notNull(),
+	fotoPerfilUrl: varchar({ length: 2048 }).default(''),
+	createdAt: timestamp("created_at").defaultNow(),
 }, (table) => [
 	unique("usuario_cpf_unique").on(table.cpf),
 	unique("usuario_email_unique").on(table.email),

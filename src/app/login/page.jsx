@@ -40,10 +40,38 @@ export default function PaginaDeLogin() {
   };
   
   // REATORADO: Handler para o submit do formulário
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Dados de login:", loginData);
-    // Aqui você faria a chamada para a API de autenticação
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || 'Erro no login.');
+        return;
+      }
+
+      // ✅ Armazena o token no localStorage (ou cookie, se quiser mais seguro)
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('usuario', JSON.stringify(data.usuario));
+
+      alert('Login realizado com sucesso!');
+      
+      // Redireciona, por exemplo, para a dashboard
+      window.location.href = '/profile'; // ou use `router.push('/dashboard')` se estiver usando Next Router
+
+    } catch (error) {
+      console.error('Erro ao fazer login:', error);
+      alert('Erro inesperado ao tentar logar.');
+    }
   };
 
   return (

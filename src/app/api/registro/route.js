@@ -37,6 +37,7 @@ export async function POST(request) {
                 telefone: telefone,
                 endereco: endereco,
                 dataNascimento: dataNascimento,
+                senha: hashedPassword
             }).returning({ id: usuario.id });
 
             const usuarioId = novoUsuario[0].id;
