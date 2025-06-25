@@ -18,6 +18,9 @@ Adicione o .env com os seguintes campos:
 `POSTGRES_PASSWORD=password`
 `DATABASE_URL=url_neon`
 `JWT_SECRET="9e34fa6a8c9d4176a0a5b8cd2e43cfb8416aa6e51ffad8cb42dcf8cdef12a304"`
+`CLOUDINARY_API_SECRET="aquelas strings bem estranhas"`
+`CLOUDINARY_API_KEY="digitos 12345678"`
+`CLOUDINARY_CLOUD_NAME="cloudname"`
 
 Para buscar mudanças no banco de dados rode:
 `npm run db:pull`
