@@ -93,7 +93,7 @@ export default function PaginaDeLogin() {
             placeholder="exemplo@email.com"
             value={loginData.email}
             onChange={handleChange}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
             required
           />
         </div>
@@ -110,7 +110,7 @@ export default function PaginaDeLogin() {
               placeholder="••••••••"
               value={loginData.senha}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
               required
             />
             <button

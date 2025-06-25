@@ -117,49 +117,49 @@ export default function PaginaDeRegistro() {
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label htmlFor="nome" className="block text-sm font-semibold text-gray-700 mb-1">Nome completo</label>
-                    <input type="text" id="nome" name="nome" placeholder="João da Silva" value={formData.nome} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg" required />
+                    <input type="text" id="nome" name="nome" placeholder="João da Silva" value={formData.nome} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black" required />
                 </div>
                 
                 <div className="mb-4">
                     <label htmlFor="cpf" className="block text-sm font-semibold text-gray-700 mb-1">CPF</label>
-                    <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" value={formData.cpf} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg" required />
+                    <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" value={formData.cpf} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black" required />
                 </div>
 
                 <div className="mb-4">
                     <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">E-mail</label>
-                    <input type="email" id="email" name="email" placeholder="exemplo@email.com" value={formData.email} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg" required />
+                    <input type="email" id="email" name="email" placeholder="exemplo@email.com" value={formData.email} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black" required />
                 </div>
 
                 <div className="mb-4">
                     <label htmlFor="telefone" className="block text-sm font-semibold text-gray-700 mb-1">Telefone</label>
-                    <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" value={formData.telefone} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg" required />
+                    <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" value={formData.telefone} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black" required />
                 </div>
 
                 <div className="mb-4">
                     <label htmlFor="endereco" className="block text-sm font-semibold text-gray-700 mb-1">Endereço</label>
-                    <input type="text" id="endereco" name="endereco" placeholder="Rua Exemplo, 123" value={formData.endereco} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg" required />
+                    <input type="text" id="endereco" name="endereco" placeholder="Rua Exemplo, 123" value={formData.endereco} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black" required />
                 </div>
 
                 <div className="mb-4">
                     <label htmlFor="dataNascimento" className="block text-sm font-semibold text-gray-700 mb-1">Data de nascimento</label>
-                    <input type="date" id="dataNascimento" name="dataNascimento" value={formData.dataNascimento} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg" required />
+                    <input type="date" id="dataNascimento" name="dataNascimento" value={formData.dataNascimento} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black" required />
                 </div>
                 
                 {userType === 'profissional' && (
                     <div className="mb-4">
                         <label htmlFor="especialidade" className="block text-sm font-semibold text-gray-700 mb-1">Sua Especialidade</label>
-                        <input type="text" id="especialidade" name="especialidade" placeholder="Ex: Encanador, Eletricista" value={formData.especialidade} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg" required />
+                        <input type="text" id="especialidade" name="especialidade" placeholder="Ex: Encanador, Eletricista" value={formData.especialidade} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black" required />
                     </div>
                 )}
                 
                 <div className="mb-4 relative">
                     <label htmlFor="senha" className="block text-sm font-semibold text-gray-700 mb-1">Senha</label>
-                    <input type={showPassword ? 'text' : 'password'} id="senha" name="senha" placeholder="••••••••" value={formData.senha} onChange={handleChange} className="w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-lg" required />
+                    <input type={showPassword ? 'text' : 'password'} id="senha" name="senha" placeholder="••••••••" value={formData.senha} onChange={handleChange} className="w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-lg text-black" required />
                 </div>
 
                 <div className="mb-6 relative">
                     <label htmlFor="confirmarSenha" className="block text-sm font-semibold text-gray-700 mb-1">Confirmar Senha</label>
-                    <input type={showPassword ? 'text' : 'password'} id="confirmarSenha" name="confirmarSenha" placeholder="••••••••" value={formData.confirmarSenha} onChange={handleChange} className="w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-lg" required />
+                    <input type={showPassword ? 'text' : 'password'} id="confirmarSenha" name="confirmarSenha" placeholder="••••••••" value={formData.confirmarSenha} onChange={handleChange} className="w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-lg text-black" required />
                     <button type="button" onClick={togglePasswordVisibility} className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-indigo-600 -translate-y-1/2 top-1/2">
                         {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
                     </button>
