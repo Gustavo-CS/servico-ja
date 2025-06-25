@@ -19,6 +19,7 @@ function EyeSlashIcon(props) {
     );
 }
 
+
 function formatarCPF(cpf) {
     const numeros = cpf.replace(/\D/g, '').slice(0, 11);
     return numeros
@@ -27,27 +28,7 @@ function formatarCPF(cpf) {
         .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
 }
 
-
-const cidadesDF = [
-    '', 
-    'Plano Piloto', 'Taguatinga', 'Ceilândia', 'Samambaia', 'Gama',
-    'Guará', 'Águas Claras', 'Sobradinho', 'Recanto das Emas', 'Santa Maria',
-    'Arniqueira', 'Vicente Pires', 'Lago Sul', 'Lago Norte', 'Riacho Fundo I',
-    'Riacho Fundo II', 'Cruzeiro', 'Paranoá', 'São Sebastião', 'Brazlândia'
-].sort((a, b) => a.localeCompare(b)); 
-
-const especialidadesComuns = [
-    '',
-    'Eletricista', 'Encanador', 'Diarista', 'Jardineiro', 'Montador de Móveis',
-    'Pedreiro', 'Pintor', 'Mecânico (Geral)', 'Chaveiro', 'Gesseiro',
-    'Instalador de Ar Condicionado', 'Vidraceiro', 'Marceneiro', 'Serralheiro',
-    'Desentupidor', 'Dedetizador', 'Tapeceiro', 'Técnico de Eletrônicos',
-    'Churrasqueiro', 'Costureira/Alfaiate'
-].sort((a, b) => a.localeCompare(b));
-
-
 export default function PaginaDeRegistro() {
-
     const [userType, setUserType] = useState('usuario');
     const [formData, setFormData] = useState({
         nome: '',
@@ -55,11 +36,10 @@ export default function PaginaDeRegistro() {
         email: '',
         telefone: '',
         endereco: '',
-        regiaoAdministrativa: '',
         dataNascimento: '',
         senha: '',
         confirmarSenha: '',
-        especialidade: '', 
+        especialidade: '',
     });
 
     const [showPassword, setShowPassword] = useState(false);
@@ -70,21 +50,8 @@ export default function PaginaDeRegistro() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        let newValue = value;
-
-        if (name === 'cpf') {
-            newValue = formatarCPF(value);
-        }
-
+        const newValue = name === 'cpf' ? formatarCPF(value) : value;
         setFormData({ ...formData, [name]: newValue });
-    };
-
-    const handleUserTypeChange = (e) => {
-        const newUserType = e.target.value;
-        setUserType(newUserType);
-        if (newUserType === 'usuario') {
-            setFormData(prev => ({ ...prev, especialidade: '' }));
-        }
     };
 
     const handleSubmit = async (e) => {
@@ -98,23 +65,9 @@ export default function PaginaDeRegistro() {
             return;
         }
 
-        if (!formData.regiaoAdministrativa) {
-            setError("Por favor, selecione sua Cidade/Região Administrativa.");
-            setIsLoading(false);
-            return;
-        }
-
-        if (userType === 'profissional' && !formData.especialidade) {
-            setError("Por favor, selecione uma Especialidade para o profissional.");
-            setIsLoading(false);
-            return;
-        }
-
-
         const finalData = {
             userType,
             ...formData,
-            especialidade: userType === 'profissional' ? formData.especialidade : '',
         };
 
         try {
@@ -133,8 +86,6 @@ export default function PaginaDeRegistro() {
             }
 
             alert('Conta criada com sucesso!');
-
-            window.location.href = '/login';
             
         } catch (err) {
             setError(err.message);
@@ -153,11 +104,11 @@ export default function PaginaDeRegistro() {
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Qual tipo de conta você deseja criar?</label>
                 <div className="flex items-center space-x-4">
                     <label className="flex items-center cursor-pointer">
-                        <input type="radio" name="userType" value="usuario" checked={userType === 'usuario'} onChange={handleUserTypeChange} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" />
+                        <input type="radio" name="userType" value="usuario" checked={userType === 'usuario'} onChange={(e) => setUserType(e.target.value)} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" />
                         <span className="ml-2 text-gray-800">Sou Cliente</span>
                     </label>
                     <label className="flex items-center cursor-pointer">
-                        <input type="radio" name="userType" value="profissional" checked={userType === 'profissional'} onChange={handleUserTypeChange} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" />
+                        <input type="radio" name="userType" value="profissional" checked={userType === 'profissional'} onChange={(e) => setUserType(e.target.value)} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" />
                         <span className="ml-2 text-gray-800">Sou Profissional</span>
                     </label>
                 </div>
@@ -185,26 +136,7 @@ export default function PaginaDeRegistro() {
                 </div>
 
                 <div className="mb-4">
-                    <label htmlFor="regiaoAdministrativa" className="block text-sm font-semibold text-gray-700 mb-1">
-                        Sua Cidade / Região Administrativa (DF)
-                    </label>
-                    <select
-                        id="regiaoAdministrativa"
-                        name="regiaoAdministrativa"
-                        value={formData.regiaoAdministrativa}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black bg-white"
-                        required
-                    >
-                        <option value="">Selecione uma cidade/RA</option>
-                        {cidadesDF.map(cidade => (
-                            <option key={cidade} value={cidade}>{cidade}</option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className="mb-4">
-                    <label htmlFor="endereco" className="block text-sm font-semibold text-gray-700 mb-1">Endereço (Rua, Número, Complemento)</label>
+                    <label htmlFor="endereco" className="block text-sm font-semibold text-gray-700 mb-1">Endereço</label>
                     <input type="text" id="endereco" name="endereco" placeholder="Rua Exemplo, 123" value={formData.endereco} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black" required />
                 </div>
 
@@ -215,22 +147,8 @@ export default function PaginaDeRegistro() {
                 
                 {userType === 'profissional' && (
                     <div className="mb-4">
-                        <label htmlFor="especialidade" className="block text-sm font-semibold text-gray-700 mb-1">
-                            Sua Especialidade Principal
-                        </label>
-                        <select
-                            id="especialidade"
-                            name="especialidade"
-                            value={formData.especialidade}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black bg-white"
-                            required 
-                        >
-                            <option value="">Selecione uma especialidade</option>
-                            {especialidadesComuns.map(esp => (
-                                <option key={esp} value={esp}>{esp}</option>
-                            ))}
-                        </select>
+                        <label htmlFor="especialidade" className="block text-sm font-semibold text-gray-700 mb-1">Sua Especialidade</label>
+                        <input type="text" id="especialidade" name="especialidade" placeholder="Ex: Encanador, Eletricista" value={formData.especialidade} onChange={handleChange} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black" required />
                     </div>
                 )}
                 
