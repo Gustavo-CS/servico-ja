@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import db from '../../../infra/database.js';
-import { usuario, cliente, profissional } from '../../../../drizzle/schema.ts';
+import db from '@/infra/database.js';
+import { usuario, cliente, profissional } from '@root/drizzle/schema';
 
 export async function POST(request) {
     try {
@@ -14,14 +14,23 @@ export async function POST(request) {
             email,
             telefone,
             endereco,
+            regiaoAdministrativa, 
             dataNascimento,
             senha,
-            especialidade
+            especialidade,
+
         } = data;
-        
-        if (!nome || !email || !senha || !cpf) {
-             return NextResponse.json(
-                { message: "Dados essenciais estão faltando." },
+
+        if (!nome || !email || !senha || !cpf || !regiaoAdministrativa || !telefone || !endereco || !dataNascimento) {
+            return NextResponse.json(
+                { message: "Todos os campos obrigatórios (nome, email, senha, CPF, telefone, endereço, data de nascimento, região administrativa) devem ser preenchidos." },
+                { status: 400 }
+            );
+        }
+
+        if (userType === 'profissional' && !especialidade) {
+            return NextResponse.json(
+                { message: "Profissionais devem informar sua especialidade." },
                 { status: 400 }
             );
         }
@@ -29,15 +38,17 @@ export async function POST(request) {
         const hashedPassword = await bcrypt.hash(senha, 10);
 
         const novoUsuarioId = await db.transaction(async (tx) => {
-            
+
             const novoUsuario = await tx.insert(usuario).values({
                 nome: nome,
                 cpf: cpf.replace(/\D/g, ''),
                 email: email,
                 telefone: telefone,
-                endereco: endereco,
+                endereco: endereco, 
+                regiaoAdministrativa: regiaoAdministrativa, 
                 dataNascimento: dataNascimento,
-                senha: hashedPassword
+                senha: hashedPassword,
+               
             }).returning({ id: usuario.id });
 
             const usuarioId = novoUsuario[0].id;
@@ -63,7 +74,7 @@ export async function POST(request) {
 
     } catch (error) {
         console.error("Erro no registro do usuário:", error);
-        
+
         if (error.code === '23505') { 
             return NextResponse.json(
                 { message: "Erro ao criar usuário. O CPF ou E-mail já está em uso." },
