@@ -25,8 +25,19 @@ export async function middleware(req) {
 
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-    await jwtVerify(token, secret);
-    console.log('Validando token:', token);
+    const { payload } = await jwtVerify(token, secret);
+    console.log('Validando token:', payload)
+
+    const tipoConta = payload.tipoConta;
+
+    if (pathname.startsWith('/agendamento/profissional') && tipoConta !== 'profissional') {
+      return NextResponse.redirect(new URL('/login', req.url)); 
+    }
+
+    if (pathname.startsWith('/agendamento/cliente') && tipoConta !== 'cliente') {
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
+
     return NextResponse.next();
   } catch {
     return NextResponse.redirect(new URL('/login', req.url));
@@ -34,5 +45,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/profile/:path*', '/api/me', '/api/upload_image_profile'],
+  matcher: ['/profile/:path*', '/api/me', '/api/upload_image_profile', '/agendamento/profissional/:path*', '/agendamento/cliente/:path*'],
 };

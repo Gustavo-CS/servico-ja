@@ -1,23 +1,7 @@
-import { pgTable, unique, integer, text, varchar, date, foreignKey, timestamp, boolean } from "drizzle-orm/pg-core"
+import { pgTable, foreignKey, integer, text, varchar, timestamp, unique, date, boolean } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
-
-export const usuario = pgTable("usuario", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "usuario_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
-	nome: text().notNull(),
-	cpf: varchar({ length: 11 }).notNull(),
-	email: varchar({ length: 255 }).notNull(),
-	senha: varchar({ length: 255 }).notNull(),
-	telefone: varchar({ length: 15 }).notNull(),
-	endereco: text().notNull(),
-	dataNascimento: date("data_nascimento").notNull(),
-	fotoPerfilUrl: varchar({ length: 2048 }).default(''),
-	createdAt: timestamp("created_at").defaultNow(),
-}, (table) => [
-	unique("usuario_cpf_unique").on(table.cpf),
-	unique("usuario_email_unique").on(table.email),
-]);
 
 export const cliente = pgTable("cliente", {
 	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cliente_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
@@ -31,30 +15,42 @@ export const cliente = pgTable("cliente", {
 		}),
 ]);
 
-export const profissional = pgTable("profissional", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "profissional_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
-	usuarioId: integer("usuario_id").notNull(),
-	especialidade: text(),
-}, (table) => [
-	foreignKey({
-			columns: [table.usuarioId],
-			foreignColumns: [usuario.id],
-			name: "profissional_usuario_id_usuario_id_fk"
-		}),
-]);
-
-export const disponibilidade = pgTable("disponibilidade", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "disponibilidade_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+export const ratings = pgTable("ratings", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "ratings_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
 	profissionalId: integer("profissional_id").notNull(),
-	dataHora: timestamp("data_hora", { mode: 'string' }).notNull(),
-	reservado: boolean().default(false).notNull(),
+	score: integer().notNull(),
+	comment: varchar({ length: 500 }),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
 }, (table) => [
 	foreignKey({
 			columns: [table.profissionalId],
-			foreignColumns: [usuario.id],
-			name: "disponibilidade_profissional_id_usuario_id_fk"
-		}).onDelete("cascade"),
+			foreignColumns: [profissional.id],
+			name: "ratings_profissional_id_profissional_id_fk"
+		}),
 ]);
+
+export const usuario = pgTable("usuario", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "usuario_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	nome: text().notNull(),
+	cpf: varchar({ length: 11 }).notNull(),
+	email: varchar({ length: 255 }).notNull(),
+	telefone: varchar({ length: 15 }).notNull(),
+	endereco: text().notNull(),
+	dataNascimento: date("data_nascimento").notNull(),
+	senha: varchar({ length: 255 }).notNull(),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+	regiaoAdministrativa: text().notNull(),
+	fotoPerfilUrl: varchar({ length: 2048 }).default(''),
+}, (table) => [
+	unique("usuario_cpf_unique").on(table.cpf),
+	unique("usuario_email_unique").on(table.email),
+]);
+
+export const neonTable = pgTable("neonTable", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "noTable4_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647 }),
+	titulo: text().notNull(),
+	column1: text("column_1"),
+});
 
 export const agendamentos = pgTable("agendamentos", {
 	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "agendamentos_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
@@ -72,6 +68,25 @@ export const agendamentos = pgTable("agendamentos", {
 			foreignColumns: [usuario.id],
 			name: "agendamentos_cliente_id_usuario_id_fk"
 		}).onDelete("cascade"),
+]);
+
+export const disponibilidade = pgTable("disponibilidade", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "disponibilidade_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	profissionalId: integer("profissional_id").notNull(),
+	dataHora: timestamp("data_hora", { mode: 'string' }).notNull(),
+	reservado: boolean().default(false).notNull(),
+});
+
+export const profissional = pgTable("profissional", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "profissional_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	usuarioId: integer("usuario_id").notNull(),
+	especialidade: text(),
+}, (table) => [
+	foreignKey({
+			columns: [table.usuarioId],
+			foreignColumns: [usuario.id],
+			name: "profissional_usuario_id_usuario_id_fk"
+		}),
 ]);
 
 export const cancelamentos = pgTable("cancelamentos", {
@@ -98,19 +113,3 @@ export const cancelamentos = pgTable("cancelamentos", {
 			name: "cancelamentos_cancelado_por_usuario_id_fk"
 		}).onDelete("set null"),
 ]);
-
-export const neonTable = pgTable("neonTable", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "noTable4_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647 }),
-	titulo: text().notNull(),
-	column1: text("column_1"),
-});
-
-export const ratings = pgTable('ratings', {
-  id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "ratings_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647 }),
-  profissionalId: integer('profissional_id')
-    .references(() => profissional.id)
-    .notNull(),
-  score: integer('score').notNull(),
-  comment: varchar('comment', { length: 500 }),
-  createdAt: timestamp('created_at').defaultNow(),
-});
