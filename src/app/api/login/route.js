@@ -47,7 +47,7 @@ export async function POST(req) {
       { expiresIn: '6h' }
     );
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: 'Login realizado com sucesso.',
       token,
       usuario: {
@@ -58,6 +58,16 @@ export async function POST(req) {
         fotoPerfilUrl: user.fotoPerfilUrl,
       },
     }, { status: 200 });
+
+    response.cookies.set('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+      maxAge: 60 * 60 * 24, // 1 dia
+      sameSite: 'lax',
+    });
+
+    return response;
 
   } catch (err) {
     console.error('Erro ao realizar login:', err);

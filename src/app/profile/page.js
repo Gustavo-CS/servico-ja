@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function PaginaDePerfil() {
   const [usuario, setUsuario] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const router = useRouter();
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
@@ -49,6 +51,16 @@ export default function PaginaDePerfil() {
     uploadFoto();
   }, [selectedFile]);
 
+  // api de logout
+  const deslogar = async () => {
+    await fetch('/api/logout', {
+      method: 'POST',
+      credentials: 'include',
+    });
+    
+    router.push('/login');
+  };
+
   if (!usuario) return <div className="p-6 text-center">Carregando...</div>;
 
   return (
@@ -87,6 +99,14 @@ export default function PaginaDePerfil() {
         <p><strong>Endereço:</strong> {usuario.endereco}</p>
         <p><strong>Tipo de Conta:</strong> {usuario.tipoConta ?? 'Não especificado'}</p>
       </div>
+      <button
+        onClick={deslogar}
+        className="mt-6 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+      >
+        Sair da conta
+      </button>
     </div>
+
+    
   );
 }
