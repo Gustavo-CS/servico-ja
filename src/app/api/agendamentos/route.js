@@ -16,15 +16,11 @@ async function getUserIdFromRequest(request) {
 
 export async function GET(request) {
   try {
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) throw new Error("Token ausente");
-    const token = authHeader.replace("Bearer ", "");
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-    const verified = await jwtVerify(token, secret);
-    const payload = verified.payload;
-
-    const userId = payload.id;
-    const tipoConta = payload.tipoConta;
+    const userId = await getUserIdFromRequest(request);
+    const tipoConta = (await jwtVerify(
+      request.headers.get("authorization").replace("Bearer ", ""),
+      new TextEncoder().encode(process.env.JWT_SECRET)
+    )).payload.tipoConta;
 
     let resultado;
 
@@ -39,10 +35,24 @@ export async function GET(request) {
         })
         .from(agendamentos)
         .leftJoin(disponibilidade, eq(agendamentos.disponibilidadeId, disponibilidade.id))
-        .leftJoin(cliente, eq(agendamentos.clienteId, cliente.id))
-        .leftJoin(usuario, eq(cliente.usuarioId, usuario.id))
+        .leftJoin(cliente, eq(cliente.usuarioId, agendamentos.clienteId))
+        .leftJoin(usuario, eq(usuario.id, cliente.usuarioId))
         .where(eq(disponibilidade.profissionalId, userId));
+      const testeCliente = await db.select().from(cliente).where(eq(cliente.id, 26));
+    console.log("Cliente ID 26:", testeCliente);
     } else {
+      const clienteRow = await db
+        .select()
+        .from(cliente)
+        .where(eq(cliente.usuarioId, userId))
+        .limit(1);
+
+      if (clienteRow.length === 0) {
+        return new Response(null, { status: 204 });
+      }
+
+      const clienteId = clienteRow[0].id;
+
       resultado = await db
         .select({
           id: agendamentos.id,
@@ -55,7 +65,7 @@ export async function GET(request) {
         .leftJoin(disponibilidade, eq(agendamentos.disponibilidadeId, disponibilidade.id))
         .leftJoin(cliente, eq(agendamentos.clienteId, cliente.id))
         .leftJoin(usuario, eq(cliente.usuarioId, usuario.id))
-        .where(eq(agendamentos.clienteId, userId));
+        .where(eq(agendamentos.clienteId, clienteId));
     }
 
     if (resultado.length > 0) {
