@@ -126,11 +126,9 @@ export default function Profissionais() {
                                 <strong className="font-semibold text-gray-800">Especialidade:</strong> {prof.especialidade}
                             </p>
                             <p className="text-gray-700 mb-1">
-                                <strong className="font-semibold text-gray-800">Região Adm.:</strong> {prof.regiaoAdministrativa}
+                                <strong className="font-semibold text-gray-800">Cidade:</strong> {prof.regiaoAdministrativa}
                             </p>
-                            <p className="text-gray-700 mb-1">
-                                <strong className="font-semibold text-gray-800">Endereço:</strong> {prof.endereco}
-                            </p>
+                        
                             <p className="text-gray-700 mb-4">
                                 <strong className="font-semibold text-gray-800">Avaliação:</strong> {prof.avaliacaoMedia ? parseFloat(prof.avaliacaoMedia).toFixed(1) : 'Sem avaliações'} ⭐
                             </p>
