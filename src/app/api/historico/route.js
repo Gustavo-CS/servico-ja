@@ -2,32 +2,45 @@ import db from "@/infra/database";
 import { profissional, cliente, usuario } from "@root/drizzle/schema";
 import { eq } from "drizzle-orm";
 
-export async function GET() {
+export async function GET(request) {
   try {
-    const profissionaisRaw = await db
-      .select()
-      .from(profissional)
-      .innerJoin(usuario, eq(profissional.usuarioId, usuario.id));
+    const { searchParams } = new URL(request.url);
+    const tipo = searchParams.get('tipo');
 
-    const clientesRaw = await db
-      .select()
-      .from(cliente)
-      .innerJoin(usuario, eq(cliente.usuarioId, usuario.id));
+    let profissionaisRaw = [];
+    let clientesRaw = [];
 
-    const profissionais = profissionaisRaw.map((row) => ({
-      ...row,
-      tipo: 'profissional',
-    }));
+    if (tipo == "profissional") {
+      profissionaisRaw = await db
+        .select()
+        .from(profissional)
+        .innerJoin(usuario, eq(profissional.usuarioId, usuario.id));
+    } else if (tipo == "cliente") {
+      clientesRaw = await db
+        .select()
+        .from(cliente)
+        .innerJoin(usuario, eq(cliente.usuarioId, usuario.id));
+    }
 
-    const clientes = clientesRaw.map((row) => ({
-      ...row,
-      tipo: 'cliente',
-    }));
+    let profissionais = [];
+    if (profissionaisRaw.length > 0) {
+      profissionais = profissionaisRaw.map((row) => ({
+        ...row,
+        tipo: 'profissional',
+      }));
+    }
+
+    let clientes = [];
+    if (clientesRaw.length > 0) {
+      clientes = clientesRaw.map((row) => ({
+        ...row,
+        tipo: 'cliente',
+      }));
+    }
 
     const data = [...profissionais, ...clientes];
 
     if (data.length > 0) {
-      console.log(data);
       return new Response(JSON.stringify(data), {
         status: 200,
         headers: { "Content-Type": "application/json" },

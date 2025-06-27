@@ -5,36 +5,40 @@ import { alias } from 'drizzle-orm/sqlite-core'; // ou 'drizzle-orm/pg-core' se 
 
 export async function GET(request, { params }) {
   try {
-    const id = params.id;
+    const param = await params;
+    const id = param.id;
     const { searchParams } = new URL(request.url);
     const tipo = searchParams.get('tipo');
 
     const usuarioCliente = alias(usuario, 'usuarioCliente');
     const usuarioProfissional = alias(usuario, 'usuarioProfissional');
 
+    console.log(id, tipo)
+
     let atendimentos = [];
     if (tipo === "cliente") {
       const clienteRaw = await db
         .select()
         .from(agendamentos)
-        .innerJoin(cliente, eq(cliente.id, agendamentos.clienteId))
+        .innerJoin(cliente, eq(cliente.usuarioId, agendamentos.clienteId))
         .innerJoin(usuarioCliente, eq(usuarioCliente.id, cliente.usuarioId))
         .innerJoin(disponibilidade, eq(disponibilidade.id, agendamentos.disponibilidadeId))
-        .innerJoin(profissional, eq(profissional.id, disponibilidade.profissionalId))
+        .innerJoin(profissional, eq(profissional.usuarioId, disponibilidade.profissionalId))
         .innerJoin(usuarioProfissional, eq(profissional.usuarioId, usuarioProfissional.id))
         .where(eq(agendamentos.clienteId, id))
       atendimentos = clienteRaw.map((row) => ({
         ...row,
         tipo: 'cliente',
       }));
+      console.log(atendimentos)
     } else {
       const profissionalRaw = await db
         .select()
         .from(agendamentos)
-        .innerJoin(cliente, eq(cliente.id, agendamentos.clienteId))
+        .innerJoin(cliente, eq(cliente.usuarioId, agendamentos.clienteId))
         .innerJoin(usuarioCliente, eq(usuarioCliente.id, cliente.usuarioId))
         .innerJoin(disponibilidade, eq(disponibilidade.id, agendamentos.disponibilidadeId))
-        .innerJoin(profissional, eq(profissional.id, disponibilidade.profissionalId))
+        .innerJoin(profissional, eq(profissional.usuarioId, disponibilidade.profissionalId))
         .innerJoin(usuarioProfissional, eq(profissional.usuarioId, usuarioProfissional.id))
         .where(eq(disponibilidade.profissionalId, id))
       atendimentos = profissionalRaw.map((row) => ({
