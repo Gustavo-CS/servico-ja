@@ -9,7 +9,7 @@ export default function AvaliarProfissional() {
   const router = useRouter();
 
   const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
+  const [comentario, setComentario] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -22,10 +22,10 @@ export default function AvaliarProfissional() {
       const res = await fetch(`/api/avaliar/${id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ score: rating, comment: comment.trim() , tipo_avaliacao: 'profissional_avaliado',}),
+        body: JSON.stringify({ score: rating, comentario: comentario.trim() , tipo_avaliacao: 'profissional_avaliado',}),
       });
       if (!res.ok) throw new Error('Falha ao enviar avaliação');
-      router.push(`/perfil/${profissionalId}?avaliado=true`);
+      router.push(`/perfil/${id}`);
     } catch (err) {
       console.error(err);
       setError('Ocorreu um erro ao enviar. Tente novamente.');
@@ -54,8 +54,8 @@ export default function AvaliarProfissional() {
       <textarea
         placeholder="Comentário (opcional)"
         rows={4}
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
+        value={comentario}
+        onChange={(e) => setComentario(e.target.value)}
         className="w-full border p-2 rounded mb-4 focus:outline-none focus:ring"
       />
 

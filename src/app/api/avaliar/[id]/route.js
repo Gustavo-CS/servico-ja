@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 import db from '@/infra/database';
-import { avaliacao } from '@/drizzle/schema';
+import { avaliacao, usuario, profissional, cliente } from '@/drizzle/schema';
 import { eq } from 'drizzle-orm';
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -31,9 +31,25 @@ export async function POST(req, {params}) {
     return NextResponse.json({ error: 'Dados inválidos.' }, { status: 400 });
   }
 
+  let row;
+
+  if (tipo_avaliacao == 'profissional_avaliado'){
+    [row] = await db
+    .select({ idAvaliado: usuario.id })
+    .from(profissional)
+    .innerJoin(usuario, eq(profissional.usuarioId, usuario.id))
+    .where(eq(profissional.id, id));
+  } else if (tipo_avaliacao == 'cliente_avaliado') {
+    [row] = await db
+    .select({ idAvaliado: usuario.id })
+    .from(cliente)
+    .innerJoin(usuario, eq(cliente.usuarioId, usuario.id))
+    .where(eq(cliente.id, id));
+  }
+
   await db.insert(avaliacao).values({
     tipo_avaliacao,
-    idAvaliado: id,
+    idAvaliado: row.idAvaliado,
     idAvaliador: userId,
     score,
     comentario: comentario || null,

@@ -57,21 +57,6 @@ export default function PaginaDePerfil() {
   }, [selectedFile]);
 
 
-  const salvarDescricao = async () => {
-    const res = await fetch('/api/update_descricao', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ descricao_perfil: descricaoTemp }),
-    });
-    if (res.ok) {
-      setUsuario(prev => ({ ...prev, descricao_perfil: descricaoTemp }));
-      setEditDescricao(false);
-    }
-  };
-
   if (!usuario) return <div className="p-6 text-center">Carregando...</div>;
 
   return (
@@ -98,7 +83,40 @@ export default function PaginaDePerfil() {
         <p><strong>Tipo de Conta:</strong> {usuario.especialidade ?? 'Não especificado'}</p>
         <p><strong>Região Administrativa:</strong> {usuario.regiaoAdministrativa ?? 'Não especificado'}</p>
       </div>
-    </div>
+
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Avaliações recebidas</h2>
+          {usuario.reviews.length === 0 ? (
+            <p className="text-gray-500">Ainda não há avaliações.</p>
+          ) : (
+            <ul className="space-y-4">
+              {usuario.reviews.map((rev) => (
+                <li key={rev.id} className="p-4 bg-gray-50 rounded shadow-sm">
+                  <div className="flex items-center mb-2">
+                    <img
+                      src={rev.avaliadorFoto || '/placeholder.png'}
+                      alt={rev.avaliadorNome}
+                      className="w-10 h-10 rounded-full object-cover mr-3"
+                    />
+                    <div>
+                      <p className="font-medium">{rev.avaliadorNome}</p>
+                      <div className="flex">
+                        {Array.from({ length: 5 }, (_, i) => (
+                          <span key={i} className={i < rev.score ? 'text-yellow-500' : 'text-gray-300'}>
+                            ★
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  {rev.comentario && <p className="text-gray-700">{rev.comentario}</p>}
+                  <p className="text-xs text-gray-400 mt-2">{new Date(rev.criadoEm).toLocaleDateString()}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
 
     
   );

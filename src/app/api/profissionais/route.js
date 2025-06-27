@@ -1,5 +1,5 @@
 import db from '@/infra/database.js';
-import { profissional, usuario, ratings } from '@root/drizzle/schema';
+import { profissional, usuario, avaliacao } from '@root/drizzle/schema';
 import { NextResponse } from 'next/server';
 import { eq, like, and, sql, avg } from 'drizzle-orm';
 
@@ -19,25 +19,38 @@ export async function GET(request) {
             conditions.push(eq(usuario.regiaoAdministrativa, regiaoAdministrativaFiltro));
         }
 
-        let query = db.select({
-            id: profissional.id,
-            nome: usuario.nome,
-            especialidade: profissional.especialidade,
-            endereco: usuario.endereco,
-            regiaoAdministrativa: usuario.regiaoAdministrativa,
-            fotoPerfilUrl: usuario.fotoPerfilUrl, 
-            avaliacaoMedia: avg(ratings.score),
+        const query = db.select({
+          id: profissional.id,
+          nome: usuario.nome,
+          especialidade: profissional.especialidade,
+          endereco: usuario.endereco,
+          regiaoAdministrativa: usuario.regiaoAdministrativa,
+          fotoPerfilUrl: usuario.fotoPerfilUrl, 
+          avaliacaoMedia: sql`
+            (
+            SELECT AVG(score)::numeric
+            FROM avaliacao
+            WHERE id_avaliado = ${profissional.usuarioId}
+                AND tipo_avaliacao = 'profissional_avaliado'
+            )
+        `.mapWith(Number),
         })
         .from(profissional)
         .innerJoin(usuario, eq(profissional.usuarioId, usuario.id))
-        .leftJoin(ratings, eq(profissional.id, ratings.profissionalId))
+        .leftJoin(
+          avaliacao,
+          and(
+            eq(avaliacao.idAvaliado, profissional.usuarioId),
+            eq(avaliacao.tipo_avaliacao, 'profissional_avaliado')
+          )
+        )
         .groupBy(
-            profissional.id,
-            usuario.nome,
-            profissional.especialidade,
-            usuario.endereco,
-            usuario.regiaoAdministrativa,
-            usuario.fotoPerfilUrl 
+          profissional.id,
+          usuario.nome,
+          profissional.especialidade,
+          usuario.endereco,
+          usuario.regiaoAdministrativa,
+          usuario.fotoPerfilUrl 
         );
 
         if (conditions.length > 0) {
