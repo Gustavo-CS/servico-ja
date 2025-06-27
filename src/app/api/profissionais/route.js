@@ -1,5 +1,5 @@
-import db from '@/infra/database';
-import { profissional, usuario, ratings } from '@/drizzle/schema';
+import db from '@/infra/database.js';
+import { profissional, usuario, ratings } from '@root/drizzle/schema';
 import { NextResponse } from 'next/server';
 import { eq, like, and, sql, avg } from 'drizzle-orm';
 
@@ -7,7 +7,7 @@ export async function GET(request) {
     try {
         const { searchParams } = new URL(request.url);
         const especialidadeFiltro = searchParams.get('especialidade');
-        const bairroFiltro = searchParams.get('bairro');
+        const regiaoAdministrativaFiltro = searchParams.get('regiaoAdministrativa');
 
         let conditions = [];
 
@@ -15,17 +15,17 @@ export async function GET(request) {
             conditions.push(eq(profissional.especialidade, especialidadeFiltro));
         }
 
-        // **Lembrete:** Idealmente, ter um campo 'bairro' separado no schema seria melhor.
-        if (bairroFiltro) {
-            conditions.push(like(usuario.endereco, `%${bairroFiltro}%`));
+        if (regiaoAdministrativaFiltro) {
+            conditions.push(eq(usuario.regiaoAdministrativa, regiaoAdministrativaFiltro));
         }
 
         let query = db.select({
-            id: profissional.id, 
-            nome: usuario.nome, 
-            especialidade: profissional.especialidade, 
-            endereco: usuario.endereco, 
-            // foto: usuario.foto, // REVISAR: Adicionar campo 'foto' ao schema 'usuario'**
+            id: profissional.id,
+            nome: usuario.nome,
+            especialidade: profissional.especialidade,
+            endereco: usuario.endereco,
+            regiaoAdministrativa: usuario.regiaoAdministrativa,
+            fotoPerfilUrl: usuario.fotoPerfilUrl, 
             avaliacaoMedia: avg(ratings.score),
         })
         .from(profissional)
@@ -36,7 +36,8 @@ export async function GET(request) {
             usuario.nome,
             profissional.especialidade,
             usuario.endereco,
-            // usuario.foto // 
+            usuario.regiaoAdministrativa,
+            usuario.fotoPerfilUrl 
         );
 
         if (conditions.length > 0) {
