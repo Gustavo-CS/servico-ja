@@ -124,10 +124,16 @@ export const avaliacao = pgTable("avaliacao", {
 		}).onUpdate("cascade").onDelete("cascade"),
 ]);
 
-export const disponibilidadeFixa = pgTable('disponibilidades_fixas', {
-  id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "disponibilidadeFixa_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
-  profissionalId: integer('profissional_id').references(() => usuario.id).notNull(),
-  diaSemana: integer('dia_semana').notNull(),
-  hora: time('hora').notNull(),
-  criadoEm: timestamp('criado_em').defaultNow().notNull(),
-});
+export const disponibilidadesFixas = pgTable("disponibilidades_fixas", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "disponibilidadeFixa_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647 }),
+	profissionalId: integer("profissional_id").notNull(),
+	diaSemana: integer("dia_semana").notNull(),
+	hora: time().notNull(),
+	criadoEm: timestamp("criado_em", { mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.profissionalId],
+			foreignColumns: [usuario.id],
+			name: "disponibilidades_fixas_profissional_id_usuario_id_fk"
+		}),
+]);

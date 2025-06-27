@@ -147,13 +147,48 @@ export default function PainelProfissional() {
     setLoading(false);
   };
 
-  // Placeholder para as funções confirmarAgendamento e cancelarAgendamento
-  const confirmarAgendamento = (id) => {
-    // lógica para confirmar agendamento
+  const confirmarAgendamento = async (id) => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/agendamentos', {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ id, profissionalAceitou: true }),
+      });
+
+      if (res.ok) await buscarAgendamentos();
+      else alert('Erro ao confirmar agendamento.');
+    } catch {
+      alert('Erro ao confirmar agendamento.');
+    }
+    setLoading(false);
   };
 
-  const cancelarAgendamento = (id) => {
-    // lógica para cancelar agendamento
+  const cancelarAgendamento = async (id) => {
+    const motivo = prompt('Informe o motivo do cancelamento:');
+    if (!motivo?.trim()) return alert('Cancelamento sem motivo não permitido.');
+
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/agendamentos/${id}`, {
+        method: 'DELETE',
+        headers,
+        body: JSON.stringify({ motivo }),
+      });
+
+      if (res.ok) {
+        alert('Agendamento cancelado com sucesso!');
+        await buscarAgendamentos();
+        await buscarCancelamentos();
+        await buscarSlotsDisponiveis(idProfissional);
+      } else {
+        const error = await res.json();
+        alert(error.error || 'Erro ao cancelar agendamento.');
+      }
+    } catch {
+      alert('Erro ao cancelar agendamento.');
+    }
+    setLoading(false);
   };
 
   return (

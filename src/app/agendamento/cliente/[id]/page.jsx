@@ -79,7 +79,7 @@ export default function PainelCliente() {
       const res = await fetch('/api/agendamentos', {
         method: 'POST',
         headers,
-        body: JSON.stringify({ disponibilidadeId: slotId }),
+        body: JSON.stringify({ slot_id: slotId }),
       });
 
       if (res.ok) {
