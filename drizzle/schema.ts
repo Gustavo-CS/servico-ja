@@ -41,6 +41,7 @@ export const usuario = pgTable("usuario", {
 	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
 	regiaoAdministrativa: text().notNull(),
 	fotoPerfilUrl: varchar({ length: 2048 }).default(''),
+	descricao_perfil: text(),
 }, (table) => [
 	unique("usuario_cpf_unique").on(table.cpf),
 	unique("usuario_email_unique").on(table.email),
@@ -100,7 +101,7 @@ export const cancelamentos = pgTable("cancelamentos", {
 	agendamentoId: integer("agendamento_id").notNull(),
 	clienteId: integer("cliente_id").notNull(),
 	motivo: text().notNull(),
-	canceladoPor: integer("cancelado_por"),
+	canceladoPor: text("cancelado_por").notNull(),
 	canceladoEm: timestamp("cancelado_em", { mode: 'string' }).defaultNow(),
 }, (table) => [
 	foreignKey({
@@ -113,9 +114,4 @@ export const cancelamentos = pgTable("cancelamentos", {
 			foreignColumns: [cliente.id],
 			name: "cancelamentos_cliente_id_cliente_id_fk"
 		}).onDelete("cascade"),
-	foreignKey({
-			columns: [table.canceladoPor],
-			foreignColumns: [usuario.id],
-			name: "cancelamentos_cancelado_por_usuario_id_fk"
-		}).onDelete("set null"),
 ]);
