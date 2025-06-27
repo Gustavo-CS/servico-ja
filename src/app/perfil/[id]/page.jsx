@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 
@@ -58,7 +60,7 @@ export default function PaginaDePerfil() {
 
 
   if (!usuario) return <div className="p-6 text-center">Carregando...</div>;
-
+  console.log(usuario)
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-3xl font-bold text-center mb-6">Meu Perfil</h1>
@@ -71,7 +73,9 @@ export default function PaginaDePerfil() {
         />
       </div>
 
-        
+      <Link href={`/agendamento/cliente/${usuario.id}`}  className='flex mx-auto items-center justify-center rounded-md border-2 border-blue-200 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-800 bg-blue-600 sm:px-8 transition-colors mb-4 w-60'>
+        contratar meus serviços
+      </Link>
       <p className="border border-gray-200 p-3 rounded bg-gray-50">
           {usuario.descricao_perfil || 'Nenhuma descrição ainda.'}
       </p>

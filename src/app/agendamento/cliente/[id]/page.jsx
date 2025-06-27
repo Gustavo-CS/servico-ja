@@ -1,12 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 
 export default function PainelCliente() {
-  const [idProfissional, setIdProfissional] = useState('');
   const [slots, setSlots] = useState([]);
   const [agendamentos, setAgendamentos] = useState([]);
   const [atualizar, setAtualizar] = useState(false);
+
+  const params = useParams();
+  const idProfissional = params.id;
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
@@ -114,25 +117,6 @@ export default function PainelCliente() {
     <div className="p-6 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">Painel do Cliente</h1>
 
-      <section className="mb-6">
-        <label className="block mb-2 font-semibold" htmlFor="idProfissional">
-          Filtrar horários por ID do profissional:
-        </label>
-        <div className="flex gap-2 mb-4">
-          <input
-            id="idProfissional"
-            type="number"
-            value={idProfissional}
-            onChange={(e) => setIdProfissional(e.target.value)}
-            placeholder="Digite o ID do profissional"
-            className="border rounded px-3 py-2 flex-grow"
-          />
-          <button onClick={filtrarPorProfissional} className="bg-blue-600 text-white px-4 py-2 rounded">
-            Filtrar
-          </button>
-        </div>
-      </section>
-
       <section className="mb-8">
         <h2 className="font-semibold text-lg mb-2">Horários Disponíveis</h2>
         {slots.length === 0 ? (
@@ -177,7 +161,7 @@ export default function PainelCliente() {
                     <span>{agendamento.status}</span>
                   )}
                 </div>
-                
+
                 {agendamento.status !== "cancelado" && (
                   <button
                     onClick={() => cancelarAgendamento(agendamento.id)}

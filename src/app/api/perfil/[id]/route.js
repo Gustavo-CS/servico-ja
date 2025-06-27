@@ -35,6 +35,7 @@ export async function GET(req, {params}) {
         regiao: usuario.regiaoAdministrativa,
         fotoPerfilUrl: usuario.fotoPerfilUrl,
         especialidade: profissional.especialidade,
+        id: usuario.id,
       })
       .from(profissional)
       .innerJoin(usuario, eq(profissional.usuarioId, usuario.id))
@@ -87,6 +88,7 @@ export async function GET(req, {params}) {
     fotoPerfilUrl: data.fotoPerfilUrl,
     regiaoAdministrativa: data.regiao,
     especialidade: data.especialidade,
+    id: data.id,
     reviews: reviews,
   });
 }
