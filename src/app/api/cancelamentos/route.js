@@ -1,6 +1,13 @@
 import db from "@/infra/database";
-import {cancelamentos, agendamentos, cliente, profissional, usuario, disponibilidade} from "@root/drizzle/schema";
-import { eq, or } from "drizzle-orm";
+import {
+  cancelamentos,
+  agendamentos,
+  cliente,
+  profissional,
+  usuario,
+  disponibilidade,
+} from "@root/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { jwtVerify } from "jose";
 
 async function getUserIdFromRequest(request) {
@@ -17,11 +24,9 @@ export async function GET(request) {
   try {
     const userId = await getUserIdFromRequest(request);
 
-    // Ver se é profissional
     const profRow = await db.select().from(profissional).where(eq(profissional.usuarioId, userId)).limit(1);
     const isProf = profRow.length > 0;
 
-    // Ver se é cliente
     const cliRow = await db.select().from(cliente).where(eq(cliente.usuarioId, userId)).limit(1);
     const isCli = cliRow.length > 0;
 
@@ -33,7 +38,6 @@ export async function GET(request) {
     }
 
     let whereClause;
-
     if (isProf) {
       whereClause = eq(disponibilidade.profissionalId, userId);
     } else {
@@ -43,29 +47,42 @@ export async function GET(request) {
     const resultado = await db
       .select({
         id: cancelamentos.id,
+        agendamentoId: cancelamentos.agendamentoId,
         motivo: cancelamentos.motivo,
         canceladoPor: cancelamentos.canceladoPor,
         canceladoEm: cancelamentos.canceladoEm,
-        clienteNome: usuario.nome,
         clienteId: cliente.id,
-        profissionalNome: usuario.nome,
+        clienteUsuarioId: cliente.usuarioId,
+        profissionalId: disponibilidade.profissionalId,
         dataHora: disponibilidade.dataHora,
+        usuarioNome: usuario.nome,
       })
       .from(cancelamentos)
       .leftJoin(agendamentos, eq(cancelamentos.agendamentoId, agendamentos.id))
       .leftJoin(disponibilidade, eq(agendamentos.disponibilidadeId, disponibilidade.id))
       .leftJoin(cliente, eq(cancelamentos.clienteId, cliente.id))
-      .leftJoin(usuario, or(
-        eq(cliente.usuarioId, usuario.id),       // nome do cliente
-        eq(disponibilidade.profissionalId, usuario.id) // nome do profissional
-      ))
+      .leftJoin(usuario, eq(usuario.id, isProf ? cliente.usuarioId : disponibilidade.profissionalId))
       .where(whereClause);
 
     if (!resultado.length) {
       return new Response(null, { status: 204 });
     }
 
-    return new Response(JSON.stringify(resultado), {
+    const response = resultado.map((row) => ({
+      id: row.id,
+      agendamentoId: row.agendamentoId,
+      motivo: row.motivo,
+      canceladoPor: row.canceladoPor,
+      canceladoEm: row.canceladoEm,
+      clienteId: row.clienteId,
+      profissionalId: row.profissionalId,
+      dataHora: row.dataHora,
+      ...(isProf
+        ? { clienteNome: row.usuarioNome }
+        : { profissionalNome: row.usuarioNome }),
+    }));
+
+    return new Response(JSON.stringify(response), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

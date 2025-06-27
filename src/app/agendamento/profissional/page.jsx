@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 export default function PainelProfissional() {
   const [disponibilidades, setDisponibilidades] = useState([]);
-  const [disponibilidadesFixas, setDisponibilidadesFixas] = useState([]); // NOVO: horários fixos
+  const [disponibilidadesFixas, setDisponibilidadesFixas] = useState([]);
   const [agendamentos, setAgendamentos] = useState([]);
   const [cancelamentos, setCancelamentos] = useState([]);
 
@@ -32,7 +32,6 @@ export default function PainelProfissional() {
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
-  // Busca disponibilidades pontuais (slots concretos)
   const buscarDisponibilidades = async () => {
     try {
       const res = await fetch('/api/disponibilidade', { headers });
@@ -43,7 +42,6 @@ export default function PainelProfissional() {
     }
   };
 
-  // NOVO: busca horários fixos semanais
   const buscarDisponibilidadesFixas = async () => {
     try {
       const res = await fetch('/api/disponibilidade/recorrente', { headers });
@@ -59,6 +57,7 @@ export default function PainelProfissional() {
       const res = await fetch('/api/agendamentos', { headers });
       const dados = res.ok ? await res.json() : [];
       setAgendamentos(dados);
+      console.log(dados);
     } catch {
       setAgendamentos([]);
     }
@@ -68,6 +67,7 @@ export default function PainelProfissional() {
     try {
       const res = await fetch('/api/cancelamentos', { headers });
       const dados = res.status === 204 ? [] : res.ok ? await res.json() : [];
+      console.log('Cancelamentos:', dados);
       setCancelamentos(dados);
     } catch {
       setCancelamentos([]);
@@ -198,7 +198,6 @@ export default function PainelProfissional() {
           Agendamentos
         </h1>
 
-        {/* Horário Pontual */}
         <section>
           <h2 className="text-2xl font-semibold mb-4 text-blue-700">Adicionar Horário Pontual</h2>
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-black">
@@ -219,7 +218,6 @@ export default function PainelProfissional() {
           </div>
         </section>
 
-        {/* Horários Fixos Semanais */}
         <section>
           <h2 className="text-2xl font-semibold mb-4 text-blue-700">Adicionar Horários Fixos Semanais</h2>
           <div className="flex flex-wrap gap-3 mb-4 justify-center">
@@ -260,7 +258,6 @@ export default function PainelProfissional() {
           </div>
         </section>
 
-        {/* Horários Disponíveis */}
         <section>
           <h2 className="text-2xl font-semibold mb-4 text-blue-700">Horários Disponíveis</h2>
           {disponibilidades.length === 0 ? (
@@ -286,7 +283,6 @@ export default function PainelProfissional() {
           )}
         </section>
 
-        {/* Agendamentos */}
         <section>
           <h2 className="text-2xl font-semibold mb-6 text-blue-700">Agendamentos</h2>
           {agendamentos.length === 0 ? (
@@ -303,7 +299,7 @@ export default function PainelProfissional() {
                       className="border rounded-md p-4 space-y-3 shadow-sm hover:shadow-md transition text-black"
                     >
                       <div>
-                        <strong>Cliente:</strong> {ag.clienteNome || ag.clienteId}
+                        <strong>Cliente:</strong> {ag.cliente_nome || ag.cliente_id}
                       </div>
                       <div>
                         <strong>Data:</strong> {new Date(ag.data_hora).toLocaleString()}
