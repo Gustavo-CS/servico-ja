@@ -1,4 +1,4 @@
-import { pgTable, unique, integer, text, varchar, date, timestamp, foreignKey, boolean } from "drizzle-orm/pg-core"
+import { pgTable, unique, integer, text, varchar, date, timestamp, foreignKey, boolean, time } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
@@ -31,37 +31,6 @@ export const cliente = pgTable("cliente", {
 			foreignColumns: [usuario.id],
 			name: "cliente_usuario_id_usuario_id_fk"
 		}),
-]);
-
-export const avaliacao = pgTable("avaliacao", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity({
-    name: "avaliacao_id_seq",
-    startWith: 1,
-    increment: 1,
-    cache: 1,
-  }),
-  idAvaliado: integer("id_avaliado").notNull(),
-  tipo_avaliacao: varchar({ length: 21 }).notNull(),
-  idAvaliador: integer("id_avaliador").notNull(),
-  score: integer("score").notNull(),
-  comentario: text("comentario"),
-  criadoEm: timestamp("criado_em").defaultNow(),
-}, (table) => [
-  foreignKey({
-    columns: [table.idAvaliado],
-    foreignColumns: [usuario.id],
-    name: "avaliacao_avaliado_fk",
-  })
-    .onDelete("cascade")
-    .onUpdate("cascade"),
-
-  foreignKey({
-    columns: [table.idAvaliador],
-    foreignColumns: [usuario.id],
-    name: "avaliacao_avaliador_fk",
-  })
-    .onDelete("cascade")
-    .onUpdate("cascade"),
 ]);
 
 export const neonTable = pgTable("neonTable", {
@@ -133,3 +102,32 @@ export const cancelamentos = pgTable("cancelamentos", {
 			name: "cancelamentos_cliente_id_cliente_id_fk"
 		}).onDelete("cascade"),
 ]);
+
+export const avaliacao = pgTable("avaliacao", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "avaliacao_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	idAvaliado: integer("id_avaliado").notNull(),
+	tipoAvaliacao: varchar("tipo_avaliacao", { length: 21 }).notNull(),
+	idAvaliador: integer("id_avaliador").notNull(),
+	score: integer().notNull(),
+	comentario: text(),
+	criadoEm: timestamp("criado_em", { mode: 'string' }).defaultNow(),
+}, (table) => [
+	foreignKey({
+			columns: [table.idAvaliado],
+			foreignColumns: [usuario.id],
+			name: "avaliacao_avaliado_fk"
+		}).onUpdate("cascade").onDelete("cascade"),
+	foreignKey({
+			columns: [table.idAvaliador],
+			foreignColumns: [usuario.id],
+			name: "avaliacao_avaliador_fk"
+		}).onUpdate("cascade").onDelete("cascade"),
+]);
+
+export const disponibilidadeFixa = pgTable('disponibilidades_fixas', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "disponibilidadeFixa_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+  profissionalId: integer('profissional_id').references(() => usuario.id).notNull(),
+  diaSemana: integer('dia_semana').notNull(),
+  hora: time('hora').notNull(),
+  criadoEm: timestamp('criado_em').defaultNow().notNull(),
+});

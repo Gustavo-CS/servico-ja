@@ -6,7 +6,9 @@ import { useParams } from 'next/navigation';
 export default function PainelCliente() {
   const [slots, setSlots] = useState([]);
   const [agendamentos, setAgendamentos] = useState([]);
-  const [atualizar, setAtualizar] = useState(false);
+  const [cancelamentos, setCancelamentos] = useState([]);
+  const [detalhesVisiveis, setDetalhesVisiveis] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const params = useParams();
   const idProfissional = params.id;
@@ -29,14 +31,12 @@ export default function PainelCliente() {
       const data = await res.json();
 
       if (!Array.isArray(data)) {
-        console.error('Resposta da API não é um array:', data);
         setSlots([]);
         return;
       }
 
       setSlots(data.filter((slot) => !slot.reservado));
-    } catch (error) {
-      console.error('Erro ao buscar horários:', error);
+    } catch {
       setSlots([]);
     }
   };
@@ -50,131 +50,206 @@ export default function PainelCliente() {
       }
       if (!res.ok) throw new Error('Erro ao buscar agendamentos');
       const data = await res.json();
-      setAgendamentos(data);
-    } catch (error) {
-      console.error('Erro ao buscar agendamentos:', error);
+      setAgendamentos(data.sort((a, b) => new Date(b.data_hora) - new Date(a.data_hora)));
+    } catch {
       setAgendamentos([]);
     }
   };
 
-  const filtrarPorProfissional = () => {
-    const profIdNum = Number(idProfissional);
-    if (!idProfissional || isNaN(profIdNum)) {
-      buscarSlotsDisponiveis(null);
-    } else {
-      buscarSlotsDisponiveis(profIdNum);
+  const buscarCancelamentos = async () => {
+    try {
+      const res = await fetch('/api/cancelamentos', { headers });
+      if (res.status === 204) {
+        setCancelamentos([]);
+        return;
+      }
+      if (!res.ok) throw new Error('Erro ao buscar cancelamentos');
+      const data = await res.json();
+      setCancelamentos(data);
+    } catch {
+      setCancelamentos([]);
     }
   };
 
   const agendarHorario = async (slotId) => {
+    if (!token) return alert('Usuário não autenticado.');
+
+    setLoading(true);
     try {
       const res = await fetch('/api/agendamentos', {
         method: 'POST',
         headers,
-        body: JSON.stringify({
-          slot_id: slotId,
-        }),
+        body: JSON.stringify({ disponibilidadeId: slotId }),
       });
 
-      if (!res.ok) {
-        const erro = await res.json();
-        throw new Error(erro.error || 'Erro ao agendar');
+      if (res.ok) {
+        alert('Agendamento realizado com sucesso!');
+        await buscarSlotsDisponiveis(idProfissional);
+        await buscarAgendamentos();
+      } else {
+        const err = await res.json();
+        alert(err.error || 'Erro ao agendar horário.');
       }
-
-      alert('Agendamento realizado com sucesso!');
-      buscarSlotsDisponiveis(idProfissional);
-      buscarAgendamentos();
-    } catch (error) {
-      alert('Erro ao agendar horário: ' + error.message);
+    } catch {
+      alert('Erro ao agendar horário.');
     }
+    setLoading(false);
   };
 
   const cancelarAgendamento = async (id) => {
     const motivo = prompt('Informe o motivo do cancelamento:');
-    if (!motivo) return alert('Cancelamento sem motivo não permitido.');
+    if (!motivo?.trim()) return alert('Cancelamento sem motivo não permitido.');
 
-    const res = await fetch(`/api/agendamentos/${id}`, {
-      method: 'DELETE',
-      headers,
-      body: JSON.stringify({ motivo }),
-    });
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/agendamentos/${id}`, {
+        method: 'DELETE',
+        headers,
+        body: JSON.stringify({ motivo }),
+      });
 
-    if (res.ok) {
-      alert('Agendamento cancelado com sucesso!');
-      setAtualizar((prev) => !prev);
-    } else {
-      const error = await res.json();
-      alert('Erro ao cancelar agendamento: ' + (error.error || 'Erro desconhecido'));
+      if (res.ok) {
+        alert('Agendamento cancelado com sucesso!');
+        await buscarAgendamentos();
+        await buscarCancelamentos();
+        await buscarSlotsDisponiveis(idProfissional);
+      } else {
+        const error = await res.json();
+        alert(error.error || 'Erro ao cancelar agendamento.');
+      }
+    } catch {
+      alert('Erro ao cancelar agendamento.');
     }
+    setLoading(false);
   };
 
   useEffect(() => {
-    buscarSlotsDisponiveis(idProfissional || null);
+    buscarSlotsDisponiveis(idProfissional);
     buscarAgendamentos();
-  }, [atualizar, idProfissional]);
+    buscarCancelamentos();
+  }, [idProfissional]);
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Painel do Cliente</h1>
+    <div className="min-h-screen bg-blue-500 py-8">
+      <div className="max-w-4xl mx-auto p-8 bg-white rounded-lg shadow-xl space-y-12 text-black">
+        <h1 className="text-4xl font-extrabold text-blue-800 text-center mb-8">
+          Agendamento
+        </h1>
 
-      <section className="mb-8">
-        <h2 className="font-semibold text-lg mb-2">Horários Disponíveis</h2>
-        {slots.length === 0 ? (
-          <p>Nenhum horário disponível no momento.</p>
-        ) : (
-          <ul className="space-y-2">
-            {slots.map((slot) => (
-              <li key={slot.id} className="border p-3 rounded flex justify-between items-center">
-                <span>{new Date(slot.dataHora).toLocaleString()}</span>
-                <button
-                  onClick={() => agendarHorario(slot.id)}
-                  className="bg-green-600 text-white px-3 py-1 rounded"
+        {/* Horários Disponíveis */}
+        <section>
+          <h2 className="text-2xl font-semibold mb-4 text-blue-700">Horários Disponíveis</h2>
+          {slots.length === 0 ? (
+            <p className="text-gray-500">Nenhum horário disponível no momento.</p>
+          ) : (
+            <ul className="divide-y divide-black">
+              {slots.map((slot) => (
+                <li
+                  key={slot.id}
+                  className="flex justify-between items-center py-3"
                 >
-                  Agendar
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <section>
-        <h2 className="font-semibold text-lg mb-2">Meus Agendamentos</h2>
-        {agendamentos.length === 0 ? (
-          <p>Você não tem agendamentos.</p>
-        ) : (
-          <ul className="space-y-2">
-            {agendamentos.map((agendamento) => (
-              <li key={agendamento.id} className="border p-3 rounded space-y-1">
-                <div>
-                  <strong>Data:</strong> {new Date(agendamento.data_hora).toLocaleString()}
-                </div>
-                <div>
-                  <strong>Status:</strong>{' '}
-                  {agendamento.status === "confirmado" ? (
-                    <span className="text-green-600 font-semibold">Confirmado</span>
-                  ) : agendamento.status === "pendente" ? (
-                    <span className="text-yellow-600 font-semibold">Pendente</span>
-                  ) : agendamento.status === "cancelado" ? (
-                    <span className="text-red-600 font-semibold">Cancelado</span>
-                  ) : (
-                    <span>{agendamento.status}</span>
-                  )}
-                </div>
-
-                {agendamento.status !== "cancelado" && (
+                  <span>{new Date(slot.dataHora).toLocaleString()}</span>
                   <button
-                    onClick={() => cancelarAgendamento(agendamento.id)}
-                    className="bg-red-600 text-white px-3 py-1 rounded mt-2"
+                    disabled={loading}
+                    onClick={() => agendarHorario(slot.id)}
+                    className="bg-green-600 hover:bg-green-700 disabled:bg-green-300 text-white px-6 py-2 rounded font-semibold transition"
                   >
-                    Cancelar Agendamento
+                    Agendar
                   </button>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        {/* Meus Agendamentos */}
+        <section>
+          <h2 className="text-2xl font-semibold mb-6 text-blue-700">Meus Agendamentos</h2>
+          {agendamentos.length === 0 ? (
+            <p>Você não tem agendamentos.</p>
+          ) : (
+            <ul className="space-y-6">
+              {agendamentos.map((ag) => {
+                const cancelamento = cancelamentos.find((c) => c.agendamentoId === ag.id);
+                return (
+                  <li key={ag.id} className="border rounded-md p-4 space-y-3 shadow-sm hover:shadow-md transition">
+                    <div>
+                      <strong>Data:</strong> {new Date(ag.data_hora).toLocaleString()}
+                    </div>
+                    <div>
+                      <strong>Status:</strong>{' '}
+                      {ag.status === 'confirmado' ? (
+                        <span className="text-green-600 font-semibold">Confirmado</span>
+                      ) : ag.status === 'pendente' ? (
+                        <span className="text-yellow-600 font-semibold">Pendente</span>
+                      ) : ag.status === 'cancelado' ? (
+                        <>
+                          <span className="text-red-600 font-semibold">Cancelado</span>
+                          <button
+                            onClick={() =>
+                              setDetalhesVisiveis((prev) => (prev === ag.id ? null : ag.id))
+                            }
+                            className="ml-3 inline-flex items-center gap-1 px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors"
+                          >
+                            {detalhesVisiveis === ag.id ? 'Ocultar detalhes' : 'Veja o porquê'}
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 1010 10A10 10 0 0012 2z"
+                              />
+                            </svg>
+                          </button>
+
+                          {detalhesVisiveis === ag.id && (
+                            <div className="mt-2 p-3 bg-gray-100 rounded text-sm space-y-1">
+                              {cancelamento ? (
+                                <>
+                                  <div>
+                                    <strong>Motivo:</strong> {cancelamento.motivo}
+                                  </div>
+                                  <div>
+                                    <strong>Cancelado por:</strong> {cancelamento.canceladoPor}
+                                  </div>
+                                  <div>
+                                    <strong>Data do cancelamento:</strong>{' '}
+                                    {new Date(cancelamento.canceladoEm).toLocaleString()}
+                                  </div>
+                                </>
+                              ) : (
+                                <div className="text-gray-500">Informações de cancelamento não encontradas.</div>
+                              )}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <span>{ag.status}</span>
+                      )}
+                    </div>
+
+                    {ag.status !== 'cancelado' && (
+                      <button
+                        disabled={loading}
+                        onClick={() => cancelarAgendamento(ag.id)}
+                        className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition font-semibold"
+                      >
+                        Cancelar
+                      </button>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
+      </div>
     </div>
   );
 }
