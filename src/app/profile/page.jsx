@@ -82,7 +82,7 @@ export default function PaginaDePerfil() {
   if (!usuario) return <div className="p-6 text-center">Carregando...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-3xl font-bold text-center mb-6">Meu Perfil</h1>
 
       <div className="flex flex-col items-center mb-6">

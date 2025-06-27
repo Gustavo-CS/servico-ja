@@ -19,38 +19,27 @@ export async function GET(request) {
             conditions.push(eq(usuario.regiaoAdministrativa, regiaoAdministrativaFiltro));
         }
 
-        const query = db.select({
-          id: profissional.id,
-          nome: usuario.nome,
-          especialidade: profissional.especialidade,
-          endereco: usuario.endereco,
-          regiaoAdministrativa: usuario.regiaoAdministrativa,
-          fotoPerfilUrl: usuario.fotoPerfilUrl, 
-          avaliacaoMedia: sql`
-            (
-            SELECT AVG(score)::numeric
-            FROM avaliacao
-            WHERE id_avaliado = ${profissional.usuarioId}
-                AND tipo_avaliacao = 'profissional_avaliado'
-            )
-        `.mapWith(Number),
+        let query = db.select({
+            id: profissional.id,
+            nome: usuario.nome,
+            especialidade: profissional.especialidade,
+            endereco: usuario.endereco,
+            regiaoAdministrativa: usuario.regiaoAdministrativa,
+            fotoPerfilUrl: usuario.fotoPerfilUrl,
+            descricaoPerfil: usuario.descricaoPerfil, 
+            avaliacaoMedia: avg(avaliacao.score),
         })
         .from(profissional)
         .innerJoin(usuario, eq(profissional.usuarioId, usuario.id))
-        .leftJoin(
-          avaliacao,
-          and(
-            eq(avaliacao.idAvaliado, profissional.usuarioId),
-            eq(avaliacao.tipoAvaliacao, 'profissional_avaliado')
-          )
-        )
+        .leftJoin(avaliacao, eq(usuario.id, avaliacao.idAvaliado)) 
         .groupBy(
-          profissional.id,
-          usuario.nome,
-          profissional.especialidade,
-          usuario.endereco,
-          usuario.regiaoAdministrativa,
-          usuario.fotoPerfilUrl 
+            profissional.id,
+            usuario.nome,
+            profissional.especialidade,
+            usuario.endereco,
+            usuario.regiaoAdministrativa,
+            usuario.fotoPerfilUrl,
+            usuario.descricaoPerfil 
         );
 
         if (conditions.length > 0) {

@@ -65,11 +65,11 @@ export default function Profissionais() {
     }, [buscarProfissionais]);
 
     return (
-        <div className="min-h-screen bg-blue-500 py-8">
+        <div className="p-4 sm:p-8"> 
             <div className="max-w-6xl mx-auto p-4 bg-white rounded-lg shadow-xl">
-                <div className="relative overflow-hidden rounded-lg mb-8"> 
-                    <div className="absolute inset-0 bg-gradient-to-r from-sky-600 to-blue-800" /> 
-                    <h1 className="relative text-4xl font-extrabold tracking-tight text-white py-6 text-center sm:text-5xl md:text-6xl"> {/* Título branco e com padding */}
+                <div className="relative overflow-hidden rounded-lg mb-8">
+                    <div className="absolute inset-0 bg-gradient-to-r from-sky-600 to-blue-800" />
+                    <h1 className="relative text-4xl font-extrabold tracking-tight text-white py-6 text-center sm:text-5xl md:text-6xl">
                         Lista de Profissionais
                     </h1>
                 </div>
@@ -124,6 +124,12 @@ export default function Profissionais() {
                             />
                             
                             <h2 className="text-2xl font-bold text-gray-900 mb-2">{prof.nome}</h2>
+
+                            {prof.descricaoPerfil && ( 
+                                <p className="text-gray-600 text-sm italic mt-2 mb-4 line-clamp-3"> 
+                                    {prof.descricaoPerfil}
+                                </p>
+                            )}
                             
                             <p className="text-gray-700 mb-1">
                                 <strong className="font-semibold text-gray-800">Especialidade:</strong> {prof.especialidade}
