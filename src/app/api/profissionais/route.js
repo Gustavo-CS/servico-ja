@@ -41,7 +41,7 @@ export async function GET(request) {
           avaliacao,
           and(
             eq(avaliacao.idAvaliado, profissional.usuarioId),
-            eq(avaliacao.tipo_avaliacao, 'profissional_avaliado')
+            eq(avaliacao.tipoAvaliacao, 'profissional_avaliado')
           )
         )
         .groupBy(
