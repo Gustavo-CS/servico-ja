@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 
 
 const cidadesDF = [
@@ -29,6 +30,8 @@ export default function Profissionais() {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    const router = useRouter();
 
     const buscarProfissionais = useCallback(async () => {
         setLoading(true);
@@ -115,7 +118,7 @@ export default function Profissionais() {
                     {profissionais.map(prof => (
                         <li key={prof.id} className="bg-white border border-gray-200 rounded-lg shadow-md p-6 flex flex-col items-center text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
                             <img 
-                                src={prof.fotoPerfilUrl || '/default-avatar.png'} 
+                                src={prof.fotoPerfilUrl || 'https://res.cloudinary.com/dtwnpkgph/image/upload/v1750992429/145856997_296fe121-5dfa-43f4-98b5-db50019738a7_afxcdn.svg'} 
                                 alt={prof.nome} 
                                 className="w-32 h-32 rounded-full object-cover border-4 border-blue-500 mb-4" 
                             />
@@ -133,8 +136,11 @@ export default function Profissionais() {
                                 <strong className="font-semibold text-gray-800">Avaliação:</strong> {prof.avaliacaoMedia ? parseFloat(prof.avaliacaoMedia).toFixed(1) : 'Sem avaliações'} ⭐
                             </p>
                             
-                            <button className="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-300">
-                                Ver Perfil
+                            <button
+                              onClick={() => router.push(`/perfil/${prof.id}`)}
+                              className="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-300"
+                            >
+                              Ver Perfil
                             </button>
                         </li>
                     ))}

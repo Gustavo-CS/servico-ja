@@ -33,18 +33,35 @@ export const cliente = pgTable("cliente", {
 		}),
 ]);
 
-export const ratings = pgTable("ratings", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "ratings_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
-	profissionalId: integer("profissional_id").notNull(),
-	score: integer().notNull(),
-	comment: varchar({ length: 500 }),
-	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+export const avaliacao = pgTable("avaliacao", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({
+    name: "avaliacao_id_seq",
+    startWith: 1,
+    increment: 1,
+    cache: 1,
+  }),
+  idAvaliado: integer("id_avaliado").notNull(),
+  tipo_avaliacao: varchar({ length: 20 }).notNull(),
+  idAvaliador: integer("id_avaliador").notNull(),
+  score: integer("score").notNull(),
+  comentario: text("comentario"),
+  criadoEm: timestamp("criado_em").defaultNow(),
 }, (table) => [
-	foreignKey({
-			columns: [table.profissionalId],
-			foreignColumns: [profissional.id],
-			name: "ratings_profissional_id_profissional_id_fk"
-		}),
+  foreignKey({
+    columns: [table.idAvaliado],
+    foreignColumns: [usuario.id],
+    name: "avaliacao_avaliado_fk",
+  })
+    .onDelete("cascade")
+    .onUpdate("cascade"),
+
+  foreignKey({
+    columns: [table.idAvaliador],
+    foreignColumns: [usuario.id],
+    name: "avaliacao_avaliador_fk",
+  })
+    .onDelete("cascade")
+    .onUpdate("cascade"),
 ]);
 
 export const neonTable = pgTable("neonTable", {
