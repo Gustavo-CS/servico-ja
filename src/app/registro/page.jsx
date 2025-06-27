@@ -6,26 +6,135 @@ import { useState } from 'react';
 function EyeIcon(props) { /* ... */ }
 function EyeSlashIcon(props) { /* ... */ }
 
-function formatarCPF(cpf) { /* ... */ }
+function formatarCPF(cpf) {
+    const numeros = cpf.replace(/\D/g, '').slice(0, 11);
+    return numeros
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
+
+function formatarCelular(valor) {
+  const numeros = valor.replace(/\D/g, '').slice(0, 11);
+
+  return numeros
+    .replace(/(\d{2})(\d)/, '($1) $2')           // adiciona DDD
+    .replace(/(\d{5})(\d)/, '$1-$2')             // adiciona hífen depois do 5º dígito
+    .replace(/(-\d{4})\d+?$/, '$1');             // bloqueia excesso de dígitos
+}
 
 // Listas de dados para os selects (mantidas)
-const cidadesDF = [ /* ... */ ].sort((a, b) => a.localeCompare(b));
+const cidadesDF = [
+    'Águas Claras', 'Arniqueira', 'Brazlândia', 'Ceilândia', 'Cruzeiro',
+    'Gama', 'Guará', 'Lago Norte', 'Lago Sul', 'Núcleo Bandeirante',
+    'Paranoá', 'Plano Piloto', 'Recanto das Emas', 'Riacho Fundo I', 'Riacho Fundo II',
+    'Samambaia', 'Santa Maria', 'São Sebastião', 'Sobradinho', 'Taguatinga',
+    'Vicente Pires'].sort((a, b) => a.localeCompare(b));
 const especialidadesComuns = [ /* ... */ ].sort((a, b) => a.localeCompare(b));
 
 
 export default function PaginaDeRegistro() {
 
     const [userType, setUserType] = useState('usuario');
-    const [formData, setFormData] = useState({ /* ... */ });
+    const [formData, setFormData] = useState({
+        nome: '',
+        cpf: '',
+        email: '',
+        telefone: '',
+        endereco: '', 
+        regiaoAdministrativa: '', 
+        dataNascimento: '',
+        senha: '',
+        confirmarSenha: '',
+        especialidade: '',
+    });
 
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
-    const handleChange = (e) => { /* ... */ };
-    const handleUserTypeChange = (e) => { /* ... */ };
-    const handleSubmit = async (e) => { /* ... */ };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        let newValue = value;
+
+        if (name === 'cpf') {
+            newValue = formatarCPF(value);
+        }
+
+        if (name === 'telefone') {
+            newValue = formatarCelular(value);
+        }
+
+        setFormData({ ...formData, [name]: newValue });
+    };
+
+    const handleUserTypeChange = (e) => {
+        const newUserType = e.target.value;
+        setUserType(newUserType);
+        if (newUserType === 'usuario') {
+            setFormData(prev => ({ ...prev, especialidade: '' }));
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setIsLoading(true);
+
+        if (formData.senha !== formData.confirmarSenha) {
+            setError("As senhas não coincidem!");
+            setIsLoading(false);
+            return;
+        }
+
+
+        if (!formData.regiaoAdministrativa) {
+            setError("Por favor, selecione sua Cidade/Região Administrativa.");
+            setIsLoading(false);
+            return;
+        }
+
+        if (userType === 'profissional' && !formData.especialidade) {
+            setError("Por favor, selecione uma Especialidade para o profissional.");
+            setIsLoading(false);
+            return;
+        }
+
+
+        const finalData = {
+            userType,
+            ...formData,
+
+            especialidade: userType === 'profissional' ? formData.especialidade : '',
+        };
+
+        try {
+            const response = await fetch('/api/registro', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(finalData),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Ocorreu um erro ao registrar.');
+            }
+
+            alert('Conta criada com sucesso!');
+
+            window.location.href = '/login';
+            
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-blue-500 py-8 flex items-center justify-center">
@@ -82,7 +191,7 @@ export default function PaginaDeRegistro() {
                             className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black bg-white"
                             required
                         >
-                            <option value="">Selecione uma cidade/RA</option>
+                            <option value="" disabled >Selecione uma cidade/RA</option>
                             {cidadesDF.map(cidade => (
                                 <option key={cidade} value={cidade}>{cidade}</option>
                             ))}

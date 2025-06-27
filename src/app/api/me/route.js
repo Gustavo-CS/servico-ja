@@ -44,6 +44,8 @@ export async function GET(req) {
     endereco: user.endereco,
     dataNascimento: user.dataNascimento,
     fotoPerfilUrl: user.fotoPerfilUrl,
+    regiaoAdministrativa: user.regiaoAdministrativa,
     tipoConta,
+    descricao: user.descricao_perfil
   });
 }

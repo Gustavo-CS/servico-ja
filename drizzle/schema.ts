@@ -53,26 +53,6 @@ export const neonTable = pgTable("neonTable", {
 	column1: text("column_1"),
 });
 
-export const agendamentos = pgTable("agendamentos", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity({name: "agendamentos_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1}),
-  disponibilidadeId: integer("disponibilidade_id").notNull(),
-  clienteId: integer("cliente_id"),
-  confirmado: boolean().default(false).notNull(),
-  status: text("status").default('pendente').notNull(),
-}, (table) => [
-  foreignKey({
-    columns: [table.disponibilidadeId],
-    foreignColumns: [disponibilidade.id],
-    name: "agendamentos_disponibilidade_id_disponibilidade_id_fk"
-  }).onDelete("cascade"),
-
-  foreignKey({
-    columns: [table.clienteId],
-    foreignColumns: [usuario.id],
-    name: "agendamentos_cliente_id_usuario_id_fk"
-  }).onDelete("cascade"),
-]);
-
 export const disponibilidade = pgTable("disponibilidade", {
 	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "disponibilidade_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
 	profissionalId: integer("profissional_id").notNull(),
@@ -83,6 +63,25 @@ export const disponibilidade = pgTable("disponibilidade", {
 			columns: [table.profissionalId],
 			foreignColumns: [usuario.id],
 			name: "disponibilidade_profissional_id_profissional_id_fk"
+		}).onDelete("cascade"),
+]);
+
+export const agendamentos = pgTable("agendamentos", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "agendamentos_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	disponibilidadeId: integer("disponibilidade_id").notNull(),
+	clienteId: integer("cliente_id"),
+	confirmado: boolean().default(false).notNull(),
+	status: text().default('pendente').notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.disponibilidadeId],
+			foreignColumns: [disponibilidade.id],
+			name: "agendamentos_disponibilidade_id_disponibilidade_id_fk"
+		}).onDelete("cascade"),
+	foreignKey({
+			columns: [table.clienteId],
+			foreignColumns: [usuario.id],
+			name: "agendamentos_cliente_id_usuario_id_fk"
 		}).onDelete("cascade"),
 ]);
 
