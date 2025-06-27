@@ -1,7 +1,25 @@
-import { pgTable, foreignKey, integer, text, varchar, timestamp, unique, date, boolean } from "drizzle-orm/pg-core"
+import { pgTable, unique, integer, text, varchar, date, timestamp, foreignKey, boolean } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
+
+export const usuario = pgTable("usuario", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "usuario_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	nome: text().notNull(),
+	cpf: varchar({ length: 11 }).notNull(),
+	email: varchar({ length: 255 }).notNull(),
+	telefone: varchar({ length: 15 }).notNull(),
+	endereco: text().notNull(),
+	dataNascimento: date("data_nascimento").notNull(),
+	senha: varchar({ length: 255 }).notNull(),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+	regiaoAdministrativa: text().notNull(),
+	fotoPerfilUrl: varchar({ length: 2048 }).default(''),
+	descricaoPerfil: text("descricao_perfil"),
+}, (table) => [
+	unique("usuario_cpf_unique").on(table.cpf),
+	unique("usuario_email_unique").on(table.email),
+]);
 
 export const cliente = pgTable("cliente", {
 	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cliente_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
@@ -29,23 +47,6 @@ export const ratings = pgTable("ratings", {
 		}),
 ]);
 
-export const usuario = pgTable("usuario", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "usuario_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
-	nome: text().notNull(),
-	cpf: varchar({ length: 11 }).notNull(),
-	email: varchar({ length: 255 }).notNull(),
-	telefone: varchar({ length: 15 }).notNull(),
-	endereco: text().notNull(),
-	dataNascimento: date("data_nascimento").notNull(),
-	senha: varchar({ length: 255 }).notNull(),
-	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-	regiaoAdministrativa: text().notNull(),
-	fotoPerfilUrl: varchar({ length: 2048 }).default(''),
-}, (table) => [
-	unique("usuario_cpf_unique").on(table.cpf),
-	unique("usuario_email_unique").on(table.email),
-]);
-
 export const neonTable = pgTable("neonTable", {
 	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "noTable4_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647 }),
 	titulo: text().notNull(),
@@ -53,21 +54,23 @@ export const neonTable = pgTable("neonTable", {
 });
 
 export const agendamentos = pgTable("agendamentos", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "agendamentos_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
-	disponibilidadeId: integer("disponibilidade_id").notNull(),
-	clienteId: integer("cliente_id"),
-	confirmado: boolean().default(false).notNull(),
+  id: integer().primaryKey().generatedAlwaysAsIdentity({name: "agendamentos_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1}),
+  disponibilidadeId: integer("disponibilidade_id").notNull(),
+  clienteId: integer("cliente_id"),
+  confirmado: boolean().default(false).notNull(),
+  status: text("status").default('pendente').notNull(),
 }, (table) => [
-	foreignKey({
-			columns: [table.disponibilidadeId],
-			foreignColumns: [disponibilidade.id],
-			name: "agendamentos_disponibilidade_id_disponibilidade_id_fk"
-		}).onDelete("cascade"),
-	foreignKey({
-			columns: [table.clienteId],
-			foreignColumns: [usuario.id],
-			name: "agendamentos_cliente_id_usuario_id_fk"
-		}).onDelete("cascade"),
+  foreignKey({
+    columns: [table.disponibilidadeId],
+    foreignColumns: [disponibilidade.id],
+    name: "agendamentos_disponibilidade_id_disponibilidade_id_fk"
+  }).onDelete("cascade"),
+
+  foreignKey({
+    columns: [table.clienteId],
+    foreignColumns: [usuario.id],
+    name: "agendamentos_cliente_id_usuario_id_fk"
+  }).onDelete("cascade"),
 ]);
 
 export const disponibilidade = pgTable("disponibilidade", {
@@ -100,7 +103,7 @@ export const cancelamentos = pgTable("cancelamentos", {
 	agendamentoId: integer("agendamento_id").notNull(),
 	clienteId: integer("cliente_id").notNull(),
 	motivo: text().notNull(),
-	canceladoPor: integer("cancelado_por"),
+	canceladoPor: text("cancelado_por").notNull(),
 	canceladoEm: timestamp("cancelado_em", { mode: 'string' }).defaultNow(),
 }, (table) => [
 	foreignKey({
@@ -113,9 +116,4 @@ export const cancelamentos = pgTable("cancelamentos", {
 			foreignColumns: [cliente.id],
 			name: "cancelamentos_cliente_id_cliente_id_fk"
 		}).onDelete("cascade"),
-	foreignKey({
-			columns: [table.canceladoPor],
-			foreignColumns: [usuario.id],
-			name: "cancelamentos_cancelado_por_usuario_id_fk"
-		}).onDelete("set null"),
 ]);

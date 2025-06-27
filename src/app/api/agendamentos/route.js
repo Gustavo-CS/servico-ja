@@ -35,7 +35,7 @@ export async function GET(request) {
           cliente_id: agendamentos.clienteId,
           data_hora: disponibilidade.dataHora,
           cliente_nome: usuario.nome,
-          confirmado: agendamentos.confirmado,
+          status: agendamentos.status,
         })
         .from(agendamentos)
         .leftJoin(disponibilidade, eq(agendamentos.disponibilidadeId, disponibilidade.id))
@@ -49,7 +49,7 @@ export async function GET(request) {
           cliente_id: agendamentos.clienteId,
           data_hora: disponibilidade.dataHora,
           cliente_nome: usuario.nome,
-          confirmado: agendamentos.confirmado,
+          status: agendamentos.status,
         })
         .from(agendamentos)
         .leftJoin(disponibilidade, eq(agendamentos.disponibilidadeId, disponibilidade.id))
@@ -103,7 +103,7 @@ export async function POST(request) {
     await db.insert(agendamentos).values({
       disponibilidadeId: slot_id,
       clienteId: cliente_id,
-      confirmado: false,
+      status: "pendente",
     });
 
     await db.update(disponibilidade).set({ reservado: true }).where(eq(disponibilidade.id, slot_id));
@@ -133,7 +133,7 @@ export async function PATCH(request) {
     }
 
     await db.update(agendamentos)
-      .set({ confirmado: true })
+      .set({ status: "confirmado" })
       .where(eq(agendamentos.id, id));
 
     return new Response(JSON.stringify({ mensagem: 'Agendamento confirmado com sucesso' }), {
