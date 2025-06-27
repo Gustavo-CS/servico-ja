@@ -20,30 +20,32 @@ export async function GET(req) {
     return NextResponse.json({ error: 'Token inválido.' }, { status: 403 });
   }
 
-  console.log(`Id: ${id}`)
-  const [data] = await db
-    .select({
-      nome: usuario.nome,
-      descricao: usuario.descricao_perfil,
-      telefone: usuario.telefone,
-      regiao: usuario.regiaoAdministrativa,
-      foto: usuario.fotoPerfilUrl,
-    })
-    .from(profissional)
-    .innerJoin(usuario, eq(profissional.usuarioId, usuario.id))
-    .where(eq(profissional.id, Number(id)))
-    console.log(data)
+  const email = decoded.email;
 
-  if (!data) {
-    return NextResponse.json({ error: 'Profissional não encontrado.' }, { status: 404 });
+  const [user] = await db.select().from(usuario).where(eq(usuario.email, email));
+  if (!user) {
+    return NextResponse.json({ error: 'Usuário não encontrado.' }, { status: 404 });
   }
 
+  // Verifica o tipo de conta (cliente ou profissional)
+  const [clienteResult] = await db.select().from(cliente).where(eq(cliente.usuarioId, user.id));
+  const [profissionalResult] = await db.select().from(profissional).where(eq(profissional.usuarioId, user.id));
+
+  let tipoConta = null;
+  if (clienteResult) tipoConta = 'cliente';
+  if (profissionalResult) tipoConta = 'profissional';
+
   return NextResponse.json({
-    nome: data.nome,
-    descricao_perfil: data.descricao,
-    telefone: data.telefone,
-    regiaoAdministrativa: data.regiao,
-    fotoPerfilUrl: data.foto,
+    id: user.id,
+    nome: user.nome,
+    email: user.email,
+    cpf: user.cpf,
+    telefone: user.telefone,
+    endereco: user.endereco,
+    dataNascimento: user.dataNascimento,
+    fotoPerfilUrl: user.fotoPerfilUrl,
+    regiaoAdministrativa: user.regiaoAdministrativa,
+    descricao_perfil: user.descricaoPerfil,
+    tipoConta,
   });
 }
-

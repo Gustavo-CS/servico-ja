@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 
 export default function AvaliarProfissional() {
   const params = useParams();
-  const Id = params.id;
+  const id = params.id;
   const router = useRouter();
 
   const [rating, setRating] = useState(0);
@@ -19,10 +19,10 @@ export default function AvaliarProfissional() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`/api/profissional/${Id}/avaliar`, {
+      const res = await fetch(`/api/avaliar/${id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ score: rating, comment: comment.trim() }),
+        body: JSON.stringify({ score: rating, comment: comment.trim() , tipo_avaliacao: 'profissional_avaliado',}),
       });
       if (!res.ok) throw new Error('Falha ao enviar avaliação');
       router.push(`/perfil/${profissionalId}?avaliado=true`);

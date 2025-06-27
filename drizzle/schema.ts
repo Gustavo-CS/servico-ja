@@ -41,7 +41,7 @@ export const avaliacao = pgTable("avaliacao", {
     cache: 1,
   }),
   idAvaliado: integer("id_avaliado").notNull(),
-  tipo_avaliacao: varchar({ length: 20 }).notNull(),
+  tipo_avaliacao: varchar({ length: 21 }).notNull(),
   idAvaliador: integer("id_avaliador").notNull(),
   score: integer("score").notNull(),
   comentario: text("comentario"),

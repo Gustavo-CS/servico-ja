@@ -71,7 +71,7 @@ export default function PaginaDePerfil() {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ descricao_perfil: descricaoTemp }),
+      body: JSON.stringify({ descricaoPerfil: descricaoTemp }),
     });
     if (res.ok) {
       setUsuario(prev => ({ ...prev, descricao_perfil: descricaoTemp }));

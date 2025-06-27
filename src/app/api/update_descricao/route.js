@@ -22,15 +22,16 @@ export async function POST(req) {
   }
 
   const body = await req.json();
-  const { descricao_perfil } = body;
-  if (typeof descricao_perfil !== 'string' || descricao_perfil.length > 240) {
+  const { descricaoPerfil } = body;
+  if (typeof descricaoPerfil !== 'string' || descricaoPerfil.length > 240) {
     return NextResponse.json({ error: 'Descrição inválida.' }, { status: 400 });
   }
 
+
   await db
     .update(usuario)
-    .set({ descricao_perfil })
-    .where(eq(usuario.id, payload.id));
+    .set({ descricaoPerfil })
+    .where(eq(usuario.id, payload.id))
 
   return NextResponse.json({ message: 'Descrição atualizada.' });
 }
