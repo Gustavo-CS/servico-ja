@@ -7,10 +7,8 @@ export default function PainelProfissional() {
   const [agendamentos, setAgendamentos] = useState([]);
   const [dataHora, setDataHora] = useState('');
 
-  // Pega o token do localStorage (ou onde você armazenar o JWT)
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-  // Headers com Authorization Bearer
   const headers = {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),

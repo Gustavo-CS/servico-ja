@@ -75,7 +75,13 @@ export const disponibilidade = pgTable("disponibilidade", {
 	profissionalId: integer("profissional_id").notNull(),
 	dataHora: timestamp("data_hora", { mode: 'string' }).notNull(),
 	reservado: boolean().default(false).notNull(),
-});
+}, (table) => [
+	foreignKey({
+			columns: [table.profissionalId],
+			foreignColumns: [usuario.id],
+			name: "disponibilidade_profissional_id_profissional_id_fk"
+		}).onDelete("cascade"),
+]);
 
 export const profissional = pgTable("profissional", {
 	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "profissional_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),

@@ -28,13 +28,16 @@ export async function POST(req) {
     }
 
     // Verifica se é cliente ou profissional
-    const [isCliente] = await db.select().from(cliente).where(eq(cliente.usuarioId, user.id));
-    const [isProfissional] = await db.select().from(profissional).where(eq(profissional.usuarioId, user.id));
+    const clientes = await db.select().from(cliente).where(eq(cliente.usuarioId, user.id));
+    const profissionais = await db.select().from(profissional).where(eq(profissional.usuarioId, user.id));
 
     let tipoConta = null;
-    if (isCliente) tipoConta = 'cliente';
-    else if (isProfissional) tipoConta = 'profissional';
-
+    if (profissionais.length > 0) {
+      tipoConta = 'profissional';
+    } else if (clientes.length > 0) {
+      tipoConta = 'cliente';
+    }
+    
     // Gera token JWT
     const token = jwt.sign(
       {

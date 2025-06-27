@@ -23,25 +23,44 @@ export default function PainelCliente() {
       }
       const res = await fetch(url, { headers });
       const data = await res.json();
-      setSlots(data.filter((slot) => !slot.reservado));
+      console.log('data recebida:', data);
+
+      if (!Array.isArray(data)) {
+        console.error('Resposta da API não é um array:', data);
+        setSlots([]);
+        return;
+      }
+
+setSlots(data.filter((slot) => !slot.reservado));
     } catch (error) {
       console.error('Erro ao buscar horários:', error);
     }
   };
 
   const buscarAgendamentos = async () => {
-    try {
-      const res = await fetch('/api/agendamentos', { headers });
-      const data = await res.json();
-      setAgendamentos(data);
-    } catch (error) {
-      console.error('Erro ao buscar agendamentos:', error);
+  try {
+    const res = await fetch('/api/agendamentos', { headers });
+    if (res.status === 204) {
+      setAgendamentos([]);
+      return;
     }
-  };
+    if (!res.ok) {
+      throw new Error('Erro ao buscar agendamentos');
+    }
+    const data = await res.json();
+    setAgendamentos(data);
+  } catch (error) {
+    console.error('Erro ao buscar agendamentos:', error);
+  }
+};
 
-  // *** Função adicionada para evitar o erro ***
   const filtrarPorProfissional = () => {
-    buscarSlotsDisponiveis(idProfissional || null);
+    const profIdNum = Number(idProfissional);
+    if (!idProfissional || isNaN(profIdNum)) {
+      buscarSlotsDisponiveis(null);
+    } else {
+      buscarSlotsDisponiveis(profIdNum);
+    }
   };
 
   const agendarHorario = async (slotId) => {
@@ -51,7 +70,6 @@ export default function PainelCliente() {
         headers,
         body: JSON.stringify({
           slot_id: slotId,
-          // cliente_id removido, pois será extraído do JWT no backend
         }),
       });
 

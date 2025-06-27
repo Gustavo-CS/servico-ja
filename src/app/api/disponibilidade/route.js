@@ -2,21 +2,24 @@ import db from "@/infra/database";
 import { disponibilidade } from "@root/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { verifyJWT } from "@/utils/jwt";
+import { NextResponse } from "next/server";
 
 export async function GET(req) {
   try {
-    // Pega token do header Authorization: Bearer <token>
     const authHeader = req.headers.get("authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Token ausente" }), { status: 401 });
     }
     const token = authHeader.replace("Bearer ", "");
     
-    // Verifica token e pega payload
     const payload = await verifyJWT(token);
-    const profissionalId = payload.id;
+    const profissionalIdDoToken = payload.id;
 
-    // Consulta só do profissional logado
+    const url = new URL(req.url);
+    const profissionalIdQuery = url.searchParams.get('profissional_id');
+
+    const profissionalId = profissionalIdQuery ?? profissionalIdDoToken;
+
     const horarios = await db
       .select()
       .from(disponibilidade)
@@ -24,7 +27,7 @@ export async function GET(req) {
       .orderBy(disponibilidade.dataHora);
 
     return new Response(JSON.stringify(horarios), {
-      status: horarios.length > 0 ? 200 : 204,
+      status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
@@ -40,7 +43,7 @@ export async function POST(req) {
   try {
     const authHeader = req.headers.get("authorization");
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Token ausente" }), { status: 401 });
+      return NextResponse.json({ error: "Token ausente" }, { status: 401 });
     }
     const token = authHeader.replace("Bearer ", "");
     const payload = await verifyJWT(token);
@@ -49,18 +52,12 @@ export async function POST(req) {
     const { data_hora } = await req.json();
 
     if (!data_hora) {
-      return new Response(
-        JSON.stringify({ error: "data_hora é obrigatório" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+      return NextResponse.json({ error: "data_hora é obrigatório" }, { status: 400 });
     }
 
     const dataHoraIso = new Date(data_hora).toISOString();
     if (isNaN(Date.parse(dataHoraIso))) {
-      return new Response(
-        JSON.stringify({ error: "Formato de data inválido" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+      return NextResponse.json({ error: "Formato de data inválido" }, { status: 400 });
     }
 
     await db.insert(disponibilidade).values({
@@ -69,15 +66,9 @@ export async function POST(req) {
       reservado: false,
     });
 
-    return new Response(
-      JSON.stringify({ mensagem: "Horário adicionado com sucesso" }),
-      { status: 201, headers: { "Content-Type": "application/json" } }
-    );
+    return NextResponse.json({ mensagem: "Horário adicionado com sucesso" }, { status: 201 });
   } catch (error) {
     console.error("Erro ao adicionar disponibilidade", error);
-    return new Response(
-      JSON.stringify({ error: "Erro interno ao adicionar disponibilidade" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return NextResponse.json({ error: "Erro interno ao adicionar disponibilidade" }, { status: 500 });
   }
 }

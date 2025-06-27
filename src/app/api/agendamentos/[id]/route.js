@@ -35,7 +35,6 @@ export async function DELETE(request, { params }) {
       });
     }
 
-    // Verifica se o agendamento pertence ao usuário que está cancelando
     const agendamento = await db.query.agendamentos.findFirst({
       where: eq(agendamentos.id, id),
     });
@@ -47,7 +46,6 @@ export async function DELETE(request, { params }) {
       });
     }
 
-    // Opcional: cheque se o usuário é o dono do agendamento (cliente) ou o profissional
     if (agendamento.clienteId !== userId) {
       return new Response(JSON.stringify({ error: "Sem permissão para cancelar este agendamento" }), {
         status: 403,
@@ -55,7 +53,6 @@ export async function DELETE(request, { params }) {
       });
     }
 
-    // Insere cancelamento e libera slot
     await db.insert(cancelamentos).values({
       agendamentoId: id,
       clienteId: agendamento.clienteId,
@@ -64,7 +61,6 @@ export async function DELETE(request, { params }) {
     });
 
     await db.update(agendamentos).set({ confirmado: false }).where(eq(agendamentos.id, id));
-    // Se quiser liberar o slot (disponibilidade), pode atualizar aqui também
 
     return new Response(JSON.stringify({ mensagem: "Agendamento cancelado com sucesso" }), {
       status: 200,
