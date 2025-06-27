@@ -45,5 +45,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/profile/:path*', '/api/me', '/api/upload_image_profile', '/agendamento/profissional/:path*', '/agendamento/cliente/:path*'],
+  matcher: ['/profile/:path*', '/perfil/:path*', '/avaliar/:path*', '/api/me', '/api/upload_image_profile', '/agendamento/profissional/:path*', '/agendamento/cliente/:path*'],
 };
