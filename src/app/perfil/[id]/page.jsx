@@ -62,7 +62,9 @@ export default function PaginaDePerfil() {
         
         // AQUI ESTÁ A CORREÇÃO PRINCIPAL:
         // A gente pega o objeto 'user' de dentro do 'data'
-        setUsuario(data.user); 
+        setUsuario(data); 
+
+        console.log(data)
         // E também pegamos a informação se somos o dono do perfil
         setIsOwner(data.isOwner); 
 
@@ -102,14 +104,13 @@ export default function PaginaDePerfil() {
 
             {/* A LÓGICA CORRIGIDA PARA MOSTRAR O BOTÃO: */}
             {/* Só mostra se NÃO formos o dono E se a conta for de um profissional */}
-            {!isOwner && usuario.tipoConta === 'profissional' && (
+            
               <Link 
                 href={`/agendamento/cliente/${usuario.id}`} 
                 className='mt-6 w-full flex items-center justify-center gap-2 rounded-lg bg-sky-500 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-sky-600 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2'>
                   <BriefcaseIcon />
                   Contratar Serviços
               </Link>
-            )}
           </div>
         </aside>
 
