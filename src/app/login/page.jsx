@@ -21,7 +21,6 @@ function EyeSlashIcon(props) {
 }
 
 export default function PaginaDeLogin() {
-  // REATORADO: Usando useState para controlar os inputs
   const [loginData, setLoginData] = useState({
     email: '',
     senha: '',
@@ -33,13 +32,11 @@ export default function PaginaDeLogin() {
     setShowPassword(!showPassword);
   };
 
-  // REATORADO: Handler para atualizar o estado
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLoginData({ ...loginData, [name]: value });
   };
   
-  // REATORADO: Handler para o submit do formulário
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -59,14 +56,12 @@ export default function PaginaDeLogin() {
         return;
       }
 
-      // ✅ Armazena o token no localStorage (ou cookie, se quiser mais seguro)
       localStorage.setItem('token', data.token);
       localStorage.setItem('usuario', JSON.stringify(data.usuario));
 
       alert('Login realizado com sucesso!');
       
-      // Redireciona, por exemplo, para a dashboard
-      window.location.href = '/profile'; // ou use `router.push('/dashboard')` se estiver usando Next Router
+      window.location.href = '/profile';
 
     } catch (error) {
       console.error('Erro ao fazer login:', error);
@@ -75,76 +70,78 @@ export default function PaginaDeLogin() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
-        Acessar Conta
-      </h1>
+    // Div principal com o fundo azul
+    <div className="min-h-screen bg-blue-500 flex items-center justify-center p-4">
+      <div className="max-w-md w-full mx-auto p-8 bg-white rounded-xl shadow-lg">
+        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
+          Acessar Conta
+        </h1>
 
-      {/* REATORADO: Adicionado onSubmit handler */}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-5">
-          <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">
-            E-mail
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="exemplo@email.com"
-            value={loginData.email}
-            onChange={handleChange}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
-            required
-          />
-        </div>
-
-        <div className="mb-6">
-          <label htmlFor="senha" className="block text-sm font-semibold text-gray-700 mb-1">
-            Senha
-          </label>
-          <div className="relative">
+        <form onSubmit={handleSubmit}>
+          <div className="mb-5">
+            <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+              E-mail
+            </label>
             <input
-              type={showPassword ? 'text' : 'password'}
-              id="senha"
-              name="senha"
-              placeholder="••••••••"
-              value={loginData.senha}
+              type="email"
+              id="email"
+              name="email"
+              placeholder="exemplo@email.com"
+              value={loginData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               required
             />
+          </div>
+
+          <div className="mb-6">
+            <label htmlFor="senha" className="block text-sm font-semibold text-gray-700 mb-2">
+              Senha
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="senha"
+                name="senha"
+                placeholder="••••••••"
+                value={loginData.senha}
+                onChange={handleChange}
+                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                required
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-blue-600"
+                aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              >
+                {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+              </button>
+            </div>
+            <div className="text-right mt-2">
+              <a href="/recupera" className="text-sm font-medium text-blue-600 hover:text-blue-500 hover:underline">
+                Esqueceu a senha?
+              </a>
+            </div>
+          </div>
+
+          <div className="mb-4">
             <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-indigo-600"
-              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              type="submit"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+              Entrar
             </button>
           </div>
-          <div className="text-right mt-1">
-            <a href="/recupera" className="text-xs text-indigo-600 hover:text-indigo-500 hover:underline">
-              Esqueceu a senha?
-            </a>
-          </div>
-        </div>
+        </form>
 
-        <div className="mb-4">
-          <button
-            type="submit"
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Entrar
-          </button>
-        </div>
-      </form>
-
-      <p className="mt-8 text-center text-sm text-gray-600">
-        Ainda não tem uma conta?{' '}
-        <a href="/registro" className="font-semibold text-indigo-600 hover:text-indigo-500 hover:underline">
-          Cadastre-se aqui
-        </a>
-      </p>
+        <p className="mt-8 text-center text-sm text-gray-600">
+          Ainda não tem uma conta?{' '}
+          <a href="/registro" className="font-semibold text-blue-600 hover:text-blue-500 hover:underline">
+            Cadastre-se aqui
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
