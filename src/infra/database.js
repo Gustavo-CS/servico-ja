@@ -4,11 +4,11 @@ import { noTable4 } from '../../drizzle/schema';
 const { Pool } = pkg;
 
 // Cria pool de conexão
+const isProd = process.env.NODE_ENV === 'production';
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: isProd ? { rejectUnauthorized: true } : false
 });
 
 // Passa o pool para o Drizzle
