@@ -53,9 +53,9 @@ export default function Navbar() {
                                 <>
                                     <Link href="/disponibilidade" className="hover:text-blue-600 transition-colors">Minha Agenda</Link> {/* Alterado aqui */}
                                     <Link href="/meus-servicos" className="hover:text-blue-600 transition-colors">Meus Serviços</Link> {/* Alterado aqui */}
+                                    <Link href="/agendamento/profissional" className="hover:text-blue-600 transition-colors">Meus Agendamentos</Link> {/* Alterado aqui */}
                                 </>
                             )}
-                            <Link href="/agendamentos" className="hover:text-blue-600 transition-colors">Meus Agendamentos</Link> {/* Alterado aqui */}
                             <Link href="/profile" className="hover:text-blue-600 transition-colors">Perfil</Link> {/* Alterado aqui */}
                             
                             <button
