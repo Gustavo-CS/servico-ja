@@ -24,14 +24,17 @@ export default function PaginaDePerfil() {
     const [descricaoTemp, setDescricaoTemp] = useState('');
     const router = useRouter();
 
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-
+    const [token, setToken] = useState(null);
+    
     useEffect(() => {
-        if (!token) {
+      const storedToken = localStorage.getItem('token');
+      setToken(storedToken);
+        if (!storedToken) {
             router.push('/login');
             return;
         }
         async function fetchUsuario() {
+          console.log("chegou até aqi")
             try {
                 const res = await fetch('/api/me', {
                     headers: { Authorization: `Bearer ${token}` },
@@ -42,7 +45,7 @@ export default function PaginaDePerfil() {
                 setDescricaoTemp(data.descricao_perfil || '');
             } catch (error) {
                 console.error(error);
-                router.push('/login');
+                // router.push('/login');
             }
         }
         fetchUsuario();
