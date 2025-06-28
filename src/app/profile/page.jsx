@@ -131,9 +131,7 @@ export default function PaginaDePerfil() {
                             <a href="#" className="flex items-center gap-3 px-3 py-2 bg-sky-50 text-sky-600 font-semibold rounded-lg">
                                 <UserIcon className="w-5 h-5" /> Meu Perfil
                             </a>
-                            <a href="#" className="flex items-center gap-3 px-3 py-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
-                                <CogIcon className="w-5 h-5" /> Configurações
-                            </a>
+                           
                             <button onClick={deslogar} className="flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                                 <LogoutIcon className="w-5 h-5" /> Sair da conta
                             </button>
