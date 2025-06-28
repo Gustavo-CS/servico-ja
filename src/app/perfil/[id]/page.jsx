@@ -130,6 +130,13 @@ export default function PaginaDePerfil() {
                   <BriefcaseIcon />
                   Contratar Serviços
               </Link>
+              <Link
+                href={`/avaliar/${usuario.id}`}
+                className="mt-6 w-full flex items-center justify-center gap-2 rounded-lg bg-yellow-500 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+              >
+                <StarIcon className="h-5 w-5" />
+                Avaliar Profissional
+              </Link>
           </div>
         </aside>
 

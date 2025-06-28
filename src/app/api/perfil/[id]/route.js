@@ -43,6 +43,7 @@ export async function GET(req, {params}) {
 
   // reviews
   let reviews;
+  let media;
   const [prof] = await db
     .select({ usuarioId: profissional.usuarioId })
     .from(profissional)
@@ -70,11 +71,19 @@ export async function GET(req, {params}) {
         eq(avaliacao.idAvaliado, usuarioAvaliadoId),
       ))
       .orderBy(avaliacao.criadoEm, 'desc');
+
+
+      media = await db
+        .select({
+          media: avg(avaliacao.score),
+        })
+        .from(avaliacao)
+        .where(eq(avaliacao.idAvaliado, usuarioAvaliadoId));
   }
 
 
   const data = result[0];
-  console.log(data);
+  const avaliacaoMedia = media[0].media ?? null;
   if (!data) {
     // If no data is found, return a 404 Not Found response
     return NextResponse.json({ error: 'Perfil não encontrado.' }, { status: 404 });
@@ -90,5 +99,6 @@ export async function GET(req, {params}) {
     especialidade: data.especialidade,
     id: data.id,
     reviews: reviews,
+    avaliacaoMedia: avaliacaoMedia,
   });
 }

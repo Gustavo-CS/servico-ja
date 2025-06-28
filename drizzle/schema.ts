@@ -2,7 +2,6 @@ import { pgTable, unique, integer, text, varchar, date, timestamp, foreignKey, b
 import { sql } from "drizzle-orm"
 
 
-
 export const usuario = pgTable("usuario", {
 	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "usuario_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
 	nome: text().notNull(),

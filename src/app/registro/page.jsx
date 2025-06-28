@@ -6,6 +6,7 @@ import { useState } from 'react';
 function EyeIcon(props) { /* ... */ }
 function EyeSlashIcon(props) { /* ... */ }
 
+
 function formatarCPF(cpf) {
     const numeros = cpf.replace(/\D/g, '').slice(0, 11);
     return numeros

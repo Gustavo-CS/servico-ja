@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 import db from '@/infra/database';
-import { avaliacao, usuario, profissional, cliente } from '@/drizzle/schema';
+import { avaliacao } from '@/drizzle/schema';
 import { eq } from 'drizzle-orm';
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -32,24 +32,26 @@ export async function POST(req, {params}) {
   }
 
   let row;
+  // if (tipo_avaliacao == 'profissional_avaliado'){
+  // [row] = await db
+  //   .select({ usuarioId: profissional.usuarioId })
+  //   .from(profissional)
+  //   .where(eq(profissional.id, id));
+  // } else if (tipo_avaliacao == 'cliente_avaliado') {
+  //   [row] = await db
+  //   .select({ idAvaliado: usuario.id })
+  //   .from(cliente)
+  //   .innerJoin(usuario, eq(cliente.usuarioId, usuario.id))
+  //   .where(eq(cliente.id, id));
+  // }
 
-  if (tipo_avaliacao == 'profissional_avaliado'){
-    [row] = await db
-    .select({ idAvaliado: usuario.id })
-    .from(profissional)
-    .innerJoin(usuario, eq(profissional.usuarioId, usuario.id))
-    .where(eq(profissional.id, id));
-  } else if (tipo_avaliacao == 'cliente_avaliado') {
-    [row] = await db
-    .select({ idAvaliado: usuario.id })
-    .from(cliente)
-    .innerJoin(usuario, eq(cliente.usuarioId, usuario.id))
-    .where(eq(cliente.id, id));
-  }
+  // if (!row) {
+  //   return NextResponse.json({ error: 'Usuário a ser avaliado não encontrado' }, { status: 404 });
+  // }
 
   await db.insert(avaliacao).values({
-    tipo_avaliacao,
-    idAvaliado: row.idAvaliado,
+    tipoAvaliacao: tipo_avaliacao,
+    idAvaliado: id,
     idAvaliador: userId,
     score,
     comentario: comentario || null,

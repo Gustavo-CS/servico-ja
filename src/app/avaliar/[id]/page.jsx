@@ -25,7 +25,16 @@ export default function AvaliarProfissional() {
         body: JSON.stringify({ score: rating, comentario: comentario.trim() , tipo_avaliacao: 'profissional_avaliado',}),
       });
       if (!res.ok) throw new Error('Falha ao enviar avaliação');
-      router.push(`/perfil/${id}`);
+
+      const profissionalRes = await fetch(`/api/profissionalById/${id}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!profissionalRes.ok) throw new Error('Falha ao receber id de profissional');
+
+      const profissionalData = await profissionalRes.json();
+
+      router.push(`/perfil/${profissionalData.profissionalId}`);
     } catch (err) {
       console.error(err);
       setError('Ocorreu um erro ao enviar. Tente novamente.');
