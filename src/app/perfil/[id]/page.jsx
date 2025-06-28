@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react'; // Adicionado useCallback
 import { useRouter, useParams } from 'next/navigation';
 
 // --- Ícones SVG para uma UI Profissional ---
@@ -12,7 +12,6 @@ const LocationIcon = (props) => (
   </svg>
 );
 
-// ÍCONE CORRIGIDO
 const BriefcaseIcon = (props) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5" {...props}>
       <path d="M8.5 2.5a.5.5 0 0 0-1 0v.213a3.52 3.52 0 0 0-1.14.713l-.159-.159a.5.5 0 0 0-.707 0l-.707.707a.5.5 0 0 0 0 .707l.159.159a3.52 3.52 0 0 0-.713 1.14H2.5a.5.5 0 0 0 0 1h.213a3.52 3.52 0 0 0 .713 1.14l-.159.159a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.159-.159a3.52 3.52 0 0 0 1.14.713v.213a.5.5 0 0 0 1 0v-.213a3.52 3.52 0 0 0 1.14-.713l.159.159a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.159-.159a3.52 3.52 0 0 0 .713-1.14h.213a.5.5 0 0 0 0-1h-.213a3.52 3.52 0 0 0-.713-1.14l.159-.159a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.159.159A3.52 3.52 0 0 0 8.5 2.713V2.5Z" />
@@ -43,40 +42,56 @@ const RenderAvaliacao = ({ avaliacaoMedia }) => {
 
 export default function PaginaDePerfil() {
   const [usuario, setUsuario] = useState(null);
-  const [isOwner, setIsOwner] = useState(false); // Estado para saber se é o dono do perfil
+  const [isOwner, setIsOwner] = useState(false);
+  const [loading, setLoading] = useState(true); // Adicionando estado de loading
+
   const router = useRouter();
   const params = useParams();
   const id = params.id;
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
   useEffect(() => {
-    async function fetchUsuario() {
+    const fetchUsuario = async () => {
       if (!id) return;
+      
       try {
         const res = await fetch(`/api/perfil/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        if (!res.ok) throw new Error('Falha ao carregar perfil do usuário.');
+
+        if (!res.ok) {
+            // Se falhar (ex: token inválido, perfil não existe), redireciona para o login
+            throw new Error('Falha ao carregar perfil, redirecionando.');
+        }
 
         const data = await res.json();
-        
-        // AQUI ESTÁ A CORREÇÃO PRINCIPAL:
-        // A gente pega o objeto 'user' de dentro do 'data'
-        setUsuario(data.user); 
-        // E também pegamos a informação se somos o dono do perfil
-        setIsOwner(data.isOwner); 
+        setUsuario(data.user);
+        setIsOwner(data.isOwner);
 
       } catch (error) {
         console.error(error);
-        // Opcional: redirecionar para uma página 404 se o perfil não for encontrado
-        // router.push('/not-found');
+        router.push('/login'); // Redireciona para login em qualquer caso de erro.
+      } finally {
+        // ESSENCIAL: Garante que o loading termine, mesmo se der erro.
+        setLoading(false);
       }
-    }
+    };
 
     fetchUsuario();
-  }, [id, token, router]);
+  // AQUI ESTÁ A CORREÇÃO PRINCIPAL: Removido 'router' da lista de dependências.
+  }, [id, token]); 
+  
+  // A verificação de loading agora usa o novo estado 'loading'
+  if (loading) return <Spinner />;
 
-  if (!usuario) return <Spinner />;
+  // Se o loading terminou e o usuário ainda é nulo, algo deu errado.
+  if (!usuario) {
+    return (
+        <div className="flex justify-center items-center min-h-screen bg-slate-50">
+            <p className="text-red-500">Não foi possível carregar o perfil.</p>
+        </div>
+    );
+  }
 
   return (
     <div className="bg-slate-50 min-h-screen p-4 sm:p-6 lg:p-8">
@@ -100,8 +115,6 @@ export default function PaginaDePerfil() {
               <span>{usuario.regiaoAdministrativa || 'Não especificado'}</span>
             </div>
 
-            {/* A LÓGICA CORRIGIDA PARA MOSTRAR O BOTÃO: */}
-            {/* Só mostra se NÃO formos o dono E se a conta for de um profissional */}
             {!isOwner && usuario.tipoConta === 'profissional' && (
               <Link 
                 href={`/agendamento/cliente/${usuario.id}`} 
