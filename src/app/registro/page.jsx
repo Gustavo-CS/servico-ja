@@ -30,7 +30,13 @@ const cidadesDF = [
     'Paranoá', 'Plano Piloto', 'Recanto das Emas', 'Riacho Fundo I', 'Riacho Fundo II',
     'Samambaia', 'Santa Maria', 'São Sebastião', 'Sobradinho', 'Taguatinga',
     'Vicente Pires'].sort((a, b) => a.localeCompare(b));
-const especialidadesComuns = [ /* ... */ ].sort((a, b) => a.localeCompare(b));
+
+const especialidadesComuns = [
+    'Eletricista', 'Encanador', 'Diarista', 'Jardineiro', 'Montador de Móveis',
+    'Pedreiro', 'Pintor', 'Mecânico (Geral)', 'Chaveiro', 'Gesseiro',
+    'Instalador de Ar Condicionado', 'Vidraceiro', 'Marceneiro', 'Serralheiro',
+    'Desentupidor', 'Dedetizador', 'Tapeceiro', 'Técnico de Eletrônicos',
+    'Churrasqueiro', 'Costureira/Alfaiate' ].sort((a, b) => a.localeCompare(b));
 
 
 export default function PaginaDeRegistro() {
@@ -221,7 +227,7 @@ export default function PaginaDeRegistro() {
                                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black bg-white"
                                 required
                             >
-                                <option value="">Selecione uma especialidade</option>
+                                <option disabled value="">Selecione uma especialidade</option>
                                 {especialidadesComuns.map(esp => (
                                     <option key={esp} value={esp}>{esp}</option>
                                 ))}
