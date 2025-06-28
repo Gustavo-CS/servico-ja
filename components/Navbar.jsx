@@ -38,25 +38,25 @@ export default function Navbar() {
         <nav className="bg-white text-blue-800 py-3 shadow-md"> 
             <div className="container mx-auto flex justify-between items-center">
 
-                <Link href="/" className="text-2xl font-bold text-blue-800 hover:text-blue-600 transition-colors"> {/* Alterado aqui */}
-                    Serviço Já
+                <Link href="/" className="text-2xl font-bold text-blue-800 hover:text-blue-600 transition-colors">
+                    <img src="/logo.png" alt="Serviço Já Logo" className="h-18 w-auto" /> 
                 </Link>
 
                 <div className="flex space-x-6 items-center">
 
-                    <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link> {/* Alterado aqui */}
-                    <Link href="/profissionais" className="hover:text-blue-600 transition-colors">Profissionais</Link> {/* Alterado aqui */}
+                    <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link> 
+                    <Link href="/profissionais" className="hover:text-blue-600 transition-colors">Profissionais</Link> 
 
                     {usuarioLogado ? (
                         <>
                             {usuarioLogado.tipoConta === 'profissional' && (
                                 <>
-                                    <Link href="/disponibilidade" className="hover:text-blue-600 transition-colors">Minha Agenda</Link> {/* Alterado aqui */}
-                                    <Link href="/meus-servicos" className="hover:text-blue-600 transition-colors">Meus Serviços</Link> {/* Alterado aqui */}
-                                    <Link href="/agendamento/profissional" className="hover:text-blue-600 transition-colors">Meus Agendamentos</Link> {/* Alterado aqui */}
+                                    
+                                    <Link href="/historico" className="hover:text-blue-600 transition-colors">Meus Serviços</Link>
+                                    <Link href="/agendamento/profissional" className="hover:text-blue-600 transition-colors">Meus Agendamentos</Link> 
                                 </>
                             )}
-                            <Link href="/profile" className="hover:text-blue-600 transition-colors">Perfil</Link> {/* Alterado aqui */}
+                            <Link href="/profile" className="hover:text-blue-600 transition-colors">Perfil</Link> 
                             
                             <button
                                 onClick={deslogar}
