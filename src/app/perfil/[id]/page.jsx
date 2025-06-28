@@ -12,9 +12,13 @@ const LocationIcon = (props) => (
   </svg>
 );
 
+// ÍCONE CORRIGIDO
 const BriefcaseIcon = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5" {...props}>
-    <path d="M8.5 2.5a.5.5 0 0 0-1 0v.213a3.52 3.52 0 0 0-1.14.713l-.159-.159a.5.5 0 0 0-.707 0l-.707.707a.5.5 0 0 0 0 .707l.159.159a3.52 3.52 0 0 0-.713 1.14H2.5a.5.5 0 0 0 0 1h.213a3.52 3.52 0 0 0 .713 1.14l-.159.159a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.159-.159a3.52 3.52 0 0 0 1.14.713v.213a.5.5 0 0 0 1 0v-.213a3.52 3.52 0 0 0 1.14-.713l.159.159a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.159-.159a3.52 3.52 0 0 0 .713-1.14h.213a.5.5 0 0 0 0-1h-.213a3.52 3.52 0 0 0-.713-1.14l.159-.159a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.159.159A3.52 3.52 0 0 0 8.5 2.713V2.5ZM6.963 6.91a2.52 2.52 0 0 1 4.074 0l.159.159a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.159-.159a3.52 3.52 0 0 0-1.14-.713V2.5a.5.5 0 0 0-1 0v2.213a2.52 2.52 0 0 1-4.074 0L5.394 4.553a.5.5 0 0 0-.707 0l-.707.707a.5.5 0 0 0 0 .707l.159.159a2.52 2.52 0 0 1 0 4.074l-.159.159a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.159-.159a2.52 2.52 0 0 1 4.074 0l.159.159a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.159-.159a2.52 2.52 0 0 1 0-4.074l.159-.159a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.159.159a3.52 3.52 0 0 0-1.14-.713V8.5a.5.5 0 0 0-1 0v.213a2.52 2.52 0 0 1 0 4.074l-.159.159a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.159-.159a3.52 3.52 0 0 0 1.14-.713V15.5a.5.5 0 0 0 1 0v-.213a2.52 2.52 0 0 1 0-4.074l.159-.159a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.159.159a3.52 3.52 0 0 0-1.14.713v.213a.5.5 0 0 0 1 0v-.213a2.52 2.52 0 0 1 4.074 0l.159.159a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.159-.159a3.52 3.52 0 0 0-.713-1.14H17.5a.5.5 0 0 0 0-1h-2.213a3.52 3.52 0 0 0-.713-1.14l.159-.159a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.159.159a3.52 3.52 0 0 0-1.14-.713V2.5a.5.5 0 0 0-1 0v.213a3.52 3.52 0 0 0-1.14.713l-.159-.159a.5.5 0 0 0-.707 0L8.606 4.553a.5.5 0 0 0 0 .707l.159.159a2.52 2.52 0 0 1 0 4.074l-.159.159a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.159-.159a3.52 3.52 0 0 0 1.14-.713V13.5a.5.5 0 0 0 1 0v-.213a2.52 2.52 0 0 1 0-4.074l.159-.159a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.159.159a3.52 3.52 0 0 0-.713-1.14H2.5a.5.5 0 0 0 0 1h2.213a3.52 3.52 0 0 0 .713 1.14l-.159.159a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.159-.159a2.52 2.52 0 0 1 4.074 0l.159.159a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.159-.159a3.52 3.52 0 0 0 .713-1.14H8.5a.5.5 0 0 0 0-1h.213a3.52 3.52 0 0 0 .713-1.14l-.159-.159a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.159.159a3.52 3.52 0 0 0-1.14.713v.213a.5.5 0 0 0 1 0V6.5a2.5 2.5 0 0 1 2.5-2.5h.5a2.5 2.5 0 0 1 2.5 2.5v.5a2.5 2.5 0 0 1-2.5 2.5h-2a.5.5 0 0 0 0 1h2a3.5 3.5 0 0 0 3.5-3.5v-.5a3.5 3.5 0 0 0-3.5-3.5h-.5a3.5 3.5 0 0 0-3.5 3.5v.213a3.52 3.52 0 0 0 0 4.074l-.159.159a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.159-.159a2.52 2.52 0 0 1 4.074 0l.159.159a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.159-.159a2.52 2.52 0 0 1 0-4.074L14.606 8.947a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.159.159a3.52 3.52 0 0 0-1.14.713V6.5a3.5 3.5 0 0 0-3.5-3.5h-.5a3.5 3.5 0 0 0-3.5 3.5v2a.5.5 0 0 0 1 0v-2a2.5 2.5 0 0 1 2.5-2.5h.5a2.5 2.5 0 0 1 2.5 2.5v.5a.5.5 0 0 0 1 0v-.5a3.5 3.5 0 0 0-3.5-3.5h-.5a3.5 3.5 0 0 0-3.5 3.5v.213a3.52 3.52 0 0 0-.713-1.14l.159-.159a.5.5 0 0 0 0-.707L4.606 2.894a.5.5 0 0 0-.707 0l-.707.707a.5.5 0 0 0 0 .707l.159.159a3.52 3.52 0 0 0 .713 1.14H2.5a.5.5 0 0 0 0 1h.213a3.52 3.52 0 0 0 .713 1.14l-.159.159a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.159-.159a3.52 3.52 0 0 0 1.14.713v.213a.5.5 0 0 0 1 0v-.213a3.52 3.52 0 0 0 1.14-.713l.159.159a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.159-.159a3.52 3.52 0 0 0-.713-1.14H8.5a.5.5 0 0 0 0-1h.213a3.52 3.52 0 0 0 .713-1.14l-.159-.159a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.159.159a3.52 3.52 0 0 0-1.14.713v2.213a.5.5 0 0 0 1 0V8.5a2.5 2.5 0 0 1 2.5-2.5h2a.5.5 0 0 0 0-1h-2a3.5 3.5 0 0 0-3.5 3.5v2.213a2.52 2.52 0 0 1-4.074 0L3.394 8.947a.5.5 0 0 0-.707 0l-.707.707a.5.5 0 0 0 0 .707l.159.159a3.52 3.52 0 0 0 0 4.074l-.159.159a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.159-.159a2.52 2.52 0 0 1 4.074 0l.159.159a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.159-.159a2.52 2.52 0 0 1 0-4.074l.159-.159a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.159.159a3.52 3.52 0 0 0-.713-1.14H2.5a.5.5 0 0 0 0-1h2.213a3.52 3.52 0 0 0 .713-1.14l-.159-.159a.5.5 0 0 0 0-.707l.707-.707a.5.5 0 0 0 .707 0l.159.159a3.52 3.52 0 0 0 1.14-.713v-.213a.5.5 0 0 0-1 0Z" /></svg>);
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5" {...props}>
+      <path d="M8.5 2.5a.5.5 0 0 0-1 0v.213a3.52 3.52 0 0 0-1.14.713l-.159-.159a.5.5 0 0 0-.707 0l-.707.707a.5.5 0 0 0 0 .707l.159.159a3.52 3.52 0 0 0-.713 1.14H2.5a.5.5 0 0 0 0 1h.213a3.52 3.52 0 0 0 .713 1.14l-.159.159a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.159-.159a3.52 3.52 0 0 0 1.14.713v.213a.5.5 0 0 0 1 0v-.213a3.52 3.52 0 0 0 1.14-.713l.159.159a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.159-.159a3.52 3.52 0 0 0 .713-1.14h.213a.5.5 0 0 0 0-1h-.213a3.52 3.52 0 0 0-.713-1.14l.159-.159a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.159.159A3.52 3.52 0 0 0 8.5 2.713V2.5Z" />
+      <path d="M11.5 6.5a.5.5 0 0 0-1 0v.5a1.5 1.5 0 0 0 1.5 1.5h.5a.5.5 0 0 0 0-1h-.5a.5.5 0 0 1-.5-.5v-.5Z" />
+    </svg>
+);
 const StarIcon = (props) => <svg className={props.className} fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>;
 
 // --- Componente de Spinner ---
@@ -28,7 +32,7 @@ const Spinner = () => (
 const RenderAvaliacao = ({ avaliacaoMedia }) => {
     const score = parseFloat(avaliacaoMedia) || 0;
     return (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 justify-center">
             {Array.from({ length: 5 }, (_, i) => (
                 <StarIcon key={i} className={`w-5 h-5 ${i < Math.round(score) ? 'text-amber-400' : 'text-slate-300'}`} />
             ))}
@@ -37,9 +41,9 @@ const RenderAvaliacao = ({ avaliacaoMedia }) => {
     );
 };
 
-
 export default function PaginaDePerfil() {
   const [usuario, setUsuario] = useState(null);
+  const [isOwner, setIsOwner] = useState(false); // Estado para saber se é o dono do perfil
   const router = useRouter();
   const params = useParams();
   const id = params.id;
@@ -53,9 +57,14 @@ export default function PaginaDePerfil() {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error('Falha ao carregar perfil do usuário.');
-        
+
         const data = await res.json();
-        setUsuario(data);
+        
+        // AQUI ESTÁ A CORREÇÃO PRINCIPAL:
+        // A gente pega o objeto 'user' de dentro do 'data'
+        setUsuario(data.user); 
+        // E também pegamos a informação se somos o dono do perfil
+        setIsOwner(data.isOwner); 
 
       } catch (error) {
         console.error(error);
@@ -72,7 +81,7 @@ export default function PaginaDePerfil() {
   return (
     <div className="bg-slate-50 min-h-screen p-4 sm:p-6 lg:p-8">
       <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
+
         {/* Coluna da Esquerda: Cartão de Perfil */}
         <aside className="lg:col-span-1 flex flex-col">
           <div className="bg-white p-6 rounded-2xl shadow-sm text-center flex flex-col items-center sticky top-8">
@@ -86,12 +95,14 @@ export default function PaginaDePerfil() {
             <div className="mt-2">
                 <RenderAvaliacao avaliacaoMedia={usuario.avaliacaoMedia} />
             </div>
-            <div className="mt-2 flex items-center gap-2 text-sm text-slate-500">
+            <div className="mt-2 flex items-center gap-2 text-sm text-slate-500 justify-center">
               <LocationIcon className="text-slate-400" />
               <span>{usuario.regiaoAdministrativa || 'Não especificado'}</span>
             </div>
-            
-            {usuario.tipoConta === 'profissional' && (
+
+            {/* A LÓGICA CORRIGIDA PARA MOSTRAR O BOTÃO: */}
+            {/* Só mostra se NÃO formos o dono E se a conta for de um profissional */}
+            {!isOwner && usuario.tipoConta === 'profissional' && (
               <Link 
                 href={`/agendamento/cliente/${usuario.id}`} 
                 className='mt-6 w-full flex items-center justify-center gap-2 rounded-lg bg-sky-500 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-sky-600 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2'>
