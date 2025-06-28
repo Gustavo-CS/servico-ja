@@ -59,7 +59,7 @@ export default function HomePage() {
             </p>
             <div className="mx-auto mt-10 max-w-sm sm:max-w-none sm:flex sm:justify-center">
                 <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
-                    <Link href="/login" className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-blue-700 shadow-sm hover:bg-blue-50 sm:px-8 transition-colors">
+                    <Link href="/profissionais" className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-blue-700 shadow-sm hover:bg-blue-50 sm:px-8 transition-colors">
                         Encontrar um Profissional
                     </Link>
                     <Link href="/registro" className="flex items-center justify-center rounded-md border-2 border-blue-200 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-800 sm:px-8 transition-colors">

@@ -39,7 +39,7 @@ export default function PaginaDePerfil() {
                 const res = await fetch('/api/me', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                if (!res.ok) throw new Error('Falha ao carregar usuário.');
+                // if (!res.ok) throw new Error('Falha ao carregar usuário.');
                 const data = await res.json();
                 setUsuario(data);
                 setDescricaoTemp(data.descricao_perfil || '');
